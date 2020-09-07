@@ -5,7 +5,6 @@ server:
     context-path: /peachJob-admin
 
 ### actuator
-
 management:
   endpoint:
     health:
@@ -22,3 +21,24 @@ info:
     name: peachJob-admin
     version: 1.0.0
     test: test
+
+### xxl-job, datasource
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/peach_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+
+    ### datasource-pool
+    hikari:
+      auto-commit: true
+      connection-test-query: SELECT 1
+      connection-timeout: 10000
+      idle-timeout: 30000
+      max-lifetime: 900000
+      maximum-pool-size: 30
+      minimum-idle: 10
+      pool-name: HikariCP
+      validation-timeout: 1000
+    type: com.zaxxer.hikari.HikariDataSource
