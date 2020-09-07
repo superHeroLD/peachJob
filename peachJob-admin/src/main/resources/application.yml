@@ -1,0 +1,22 @@
+### web
+server:
+  port: 8080
+  servlet:
+    context-path: /peachJob-admin
+
+### actuator
+
+management:
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      base-path: /monitor
+info:
+  app:
+    name: peachJob-admin
+    version: 1.0.0
+    test: test
