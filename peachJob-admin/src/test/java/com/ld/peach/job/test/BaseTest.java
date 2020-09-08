@@ -1,6 +1,6 @@
 package com.ld.peach.job.test;
 
-import com.ld.preach.job.admin.PeachJobAdminApplication;
+import com.ld.peach.job.admin.PeachJobAdminApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**

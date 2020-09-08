@@ -1,7 +1,8 @@
-package com.ld.peach.job.core.mapper;
+package com.ld.peach.job.admin.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ld.peach.job.core.model.TaskInfo;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * @InterfaceName TaskInfoMapper
@@ -10,5 +11,6 @@ import com.ld.peach.job.core.model.TaskInfo;
  * @Date 2020/9/8
  * @Version 1.0
  */
+@Mapper
 public interface TaskInfoMapper extends BaseMapper<TaskInfo> {
 }

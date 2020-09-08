@@ -1,10 +1,9 @@
 package com.ld.peach.job.test;
 
-import com.ld.peach.job.core.mapper.TaskInfoMapper;
+import com.ld.peach.job.admin.mapper.TaskInfoMapper;
 import com.ld.peach.job.core.model.TaskInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
