@@ -1,5 +1,6 @@
 package com.ld.preach.job.admin;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -11,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @Version 1.0
  */
 @SpringBootApplication
+@MapperScan("com.ld.peach.job.core.mapper")
 public class PeachJobAdminApplication {
     public static void main(String[] args) {
         SpringApplication.run(PeachJobAdminApplication.class, args);
