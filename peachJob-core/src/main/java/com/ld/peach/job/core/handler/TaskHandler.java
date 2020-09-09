@@ -19,7 +19,7 @@ public class TaskHandler implements ITaskHandler {
     private final Object target;
 
     /**
-     * 被 @WorkerTaskHandler 注解的方法
+     * 被 @PeachTask 注解的方法
      */
     private final Method method;
 
