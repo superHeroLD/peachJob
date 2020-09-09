@@ -7,7 +7,7 @@ package com.ld.peach.job.core.exception;
  * @Date 2020/9/8
  * @Version 1.0
  */
-public class TaskException extends RuntimeException {
+public class TaskException extends Exception {
 
     public TaskException() {
     }

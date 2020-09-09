@@ -2,6 +2,9 @@ package com.ld.peach.job.core.response;
 
 import lombok.Data;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
+import java.util.List;
 
 /**
  * @ClassName ExecutionParams
@@ -15,12 +18,24 @@ import lombok.ToString;
 public class ExecutionParams {
 
     /**
-     * 任务ID
+     * 执行参数
      */
-    private Long taskId;
+    public List<TaskParams> params;
 
     /**
-     * 执行入参
+     * 执行任务参数
      */
-    private String param;
+    @Data
+    @Accessors(chain = true)
+    public static class TaskParams {
+        /**
+         * 任务ID
+         */
+        private Long taskId;
+
+        /**
+         * 执行入参
+         */
+        private String param;
+    }
 }

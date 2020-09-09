@@ -77,4 +77,9 @@ public class TaskInfo {
      * 执行策略
      */
     private Short executionStrategy;
+
+    /**
+     * 执行结果
+     */
+    private String result;
 }
