@@ -58,6 +58,7 @@
         <disruptor.version>3.4.2</disruptor.version>
         <lombok.version>1.18.12</lombok.version>
         <slf4j-api.version>1.7.30</slf4j-api.version>
+        <quartz.version>2.3.2</quartz.version>
 
         <plugin.compiler.version>3.8.0</plugin.compiler.version>
         <plugin.source.version>3.0.1</plugin.source.version>

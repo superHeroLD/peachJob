@@ -4,8 +4,8 @@ import com.ld.peach.job.core.anno.PeachTask;
 import com.ld.peach.job.core.exception.PeachJobConfigException;
 import com.ld.peach.job.core.handler.TaskHandler;
 import com.ld.peach.job.core.response.TaskResponse;
-import com.ld.peach.job.core.util.MapUtils;
-import com.ld.peach.job.core.util.StringUtils;
+import com.ld.peach.job.core.util.MapUtil;
+import com.ld.peach.job.core.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -50,6 +50,15 @@ public class TaskSpringExecutor extends AbstractTaskExecutor implements Applicat
 
     @Override
     public void afterSingletonsInstantiated() {
+        injectTaskHandler(applicationContext);
+    }
+
+    /**
+     * inject task handler to spring
+     *
+     * @param applicationContext spring上下文
+     */
+    private void injectTaskHandler(ApplicationContext applicationContext) {
         if (Objects.isNull(applicationContext)) {
             return;
         }
@@ -67,7 +76,7 @@ public class TaskSpringExecutor extends AbstractTaskExecutor implements Applicat
                 LOGGER.error("[TaskSpringExecutor] resolve error for bean[" + beanDefinitionName + "].", ex);
             }
 
-            if (MapUtils.isEmpty(annotatedMethodMap)) {
+            if (MapUtil.isEmpty(annotatedMethodMap)) {
                 return;
             }
 
@@ -80,7 +89,7 @@ public class TaskSpringExecutor extends AbstractTaskExecutor implements Applicat
                 }
 
                 String handlerName = peachTask.value();
-                if (StringUtils.isBlank(handlerName)) {
+                if (StringUtil.isBlank(handlerName)) {
                     throw new PeachJobConfigException("[TaskSpringExecutor] task handler name invalid, for[" + bean.getClass() + "#" + method.getName() + "] .");
                 }
 

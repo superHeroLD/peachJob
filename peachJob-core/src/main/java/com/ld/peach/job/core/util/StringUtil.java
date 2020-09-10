@@ -7,9 +7,9 @@ package com.ld.peach.job.core.util;
  * @Date 2020/9/9
  * @Version 1.0
  */
-public class StringUtils {
+public class StringUtil {
 
-    private StringUtils() {
+    private StringUtil() {
 
     }
 

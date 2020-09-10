@@ -17,4 +17,9 @@ public interface JobConstant {
      * 失败
      */
     int CODE_FAILED = -1;
+
+    /**
+     * 最大重试次数
+     */
+    int MAX_RETRY_NUM = 10;
 }

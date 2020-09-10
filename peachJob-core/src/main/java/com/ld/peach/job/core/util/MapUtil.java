@@ -9,9 +9,9 @@ import java.util.Map;
  * @Date 2020/9/9
  * @Version 1.0
  */
-public class MapUtils {
+public class MapUtil {
 
-    private MapUtils() {
+    private MapUtil() {
 
     }
 
@@ -20,6 +20,6 @@ public class MapUtils {
     }
 
     public static boolean isNotEmpty(Map map) {
-        return !MapUtils.isEmpty(map);
+        return !MapUtil.isEmpty(map);
     }
 }

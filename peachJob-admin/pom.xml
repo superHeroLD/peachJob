@@ -69,6 +69,13 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatis.plus.boot.starter.version}</version>
         </dependency>
+
+        <!-- quartz -->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>${quartz.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
