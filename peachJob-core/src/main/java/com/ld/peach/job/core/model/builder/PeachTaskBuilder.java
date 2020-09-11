@@ -2,7 +2,7 @@ package com.ld.peach.job.core.model.builder;
 
 import com.ld.peach.job.core.constant.JobConstant;
 import com.ld.peach.job.core.model.TaskInfo;
-import com.ld.peach.job.core.util.DateUtil;
+import com.ld.peach.job.core.util.date.DateUtil;
 import com.ld.peach.job.core.util.StringUtil;
 
 import java.util.Date;
