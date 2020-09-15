@@ -1,8 +1,8 @@
 package com.ld.peach.job.core.executor;
 
 import com.ld.peach.job.core.exception.TaskException;
-import com.ld.peach.job.core.response.ExecutionParams;
-import com.ld.peach.job.core.response.TaskResponse;
+import com.ld.peach.job.core.params.ExecutionParams;
+import com.ld.peach.job.core.params.TaskResponse;
 
 /**
  * @InterfaceName ITaskExecutor

@@ -3,7 +3,7 @@ package com.ld.peach.job.core.executor;
 import com.ld.peach.job.core.anno.PeachTask;
 import com.ld.peach.job.core.exception.PeachJobConfigException;
 import com.ld.peach.job.core.handler.TaskHandler;
-import com.ld.peach.job.core.response.TaskResponse;
+import com.ld.peach.job.core.params.TaskResponse;
 import com.ld.peach.job.core.util.MapUtil;
 import com.ld.peach.job.core.util.StringUtil;
 import org.slf4j.Logger;

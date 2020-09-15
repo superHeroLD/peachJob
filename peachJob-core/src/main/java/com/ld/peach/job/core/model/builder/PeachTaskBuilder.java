@@ -168,5 +168,4 @@ public final class PeachTaskBuilder {
         checkState(StringUtil.isNotBlank(builder.taskHandler), "taskHandlerName must not blank");
         checkState(StringUtil.isNotBlank(builder.taskName), "task name must not blank");
     }
-
 }

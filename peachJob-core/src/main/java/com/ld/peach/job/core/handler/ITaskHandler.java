@@ -1,7 +1,7 @@
 package com.ld.peach.job.core.handler;
 
 import com.ld.peach.job.core.exception.TaskException;
-import com.ld.peach.job.core.response.TaskResponse;
+import com.ld.peach.job.core.params.TaskResponse;
 
 /**
  * @InterfaceName ITaskHandler

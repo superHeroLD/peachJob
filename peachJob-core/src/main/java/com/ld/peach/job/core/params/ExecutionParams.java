@@ -1,4 +1,4 @@
-package com.ld.peach.job.core.response;
+package com.ld.peach.job.core.params;
 
 import lombok.Data;
 import lombok.ToString;

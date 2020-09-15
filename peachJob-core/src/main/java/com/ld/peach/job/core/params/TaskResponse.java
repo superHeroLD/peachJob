@@ -1,4 +1,4 @@
-package com.ld.peach.job.core.response;
+package com.ld.peach.job.core.params;
 
 import com.ld.peach.job.core.constant.ResponseCode;
 import lombok.AllArgsConstructor;
