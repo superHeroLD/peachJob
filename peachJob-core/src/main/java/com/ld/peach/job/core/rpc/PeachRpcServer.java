@@ -5,7 +5,7 @@ import com.ld.peach.job.core.params.PeachRpcRequest;
 import com.ld.peach.job.core.params.PeachRpcResponse;
 import com.ld.peach.job.core.rpc.coder.DefaultDecoder;
 import com.ld.peach.job.core.rpc.coder.DefaultEncoder;
-import com.ld.peach.job.core.server.BaseServer;
+import com.ld.peach.job.core.server.Server;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -29,10 +29,9 @@ import java.util.concurrent.TimeUnit;
  * @Date 2020/9/15
  * @Version 1.0
  */
-public class PeachRpcServer extends BaseServer {
+public class PeachRpcServer extends Server {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PeachRpcServer.class);
-
 
     private Thread thread;
 
@@ -79,6 +78,8 @@ public class PeachRpcServer extends BaseServer {
 
                 LOGGER.info("PreachJob rpc remoting server start success, port: [{}]", rpcProviderFactory.getPort());
 
+                onStarted();
+
                 // wait util stop
                 future.channel().closeFuture().sync();
             } catch (Exception e) {
@@ -113,6 +114,7 @@ public class PeachRpcServer extends BaseServer {
             thread.interrupt();
         }
 
+        onStopped();
         LOGGER.info("peach-rpc remoting server destroy success.");
     }
 }

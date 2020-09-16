@@ -1,7 +1,7 @@
 package com.ld.peach.job.core.rpc;
 
 import com.ld.peach.job.core.rpc.serialize.IPeachJobRpcSerializer;
-import com.ld.peach.job.core.server.BaseServer;
+import com.ld.peach.job.core.server.Server;
 
 /**
  * @ClassName RpcProviderFactory
@@ -47,7 +47,7 @@ public class RpcProviderFactory {
 
     //----------------------------------------RPC server----------------------------------------------
 
-    private BaseServer server;
+    private Server server;
 
     public void stop() throws Exception {
         // stop server
