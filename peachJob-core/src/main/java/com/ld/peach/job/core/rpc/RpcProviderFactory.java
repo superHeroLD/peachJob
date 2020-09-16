@@ -1,6 +1,7 @@
 package com.ld.peach.job.core.rpc;
 
 import com.ld.peach.job.core.rpc.serialize.IPeachJobRpcSerializer;
+import com.ld.peach.job.core.server.BaseServer;
 
 /**
  * @ClassName RpcProviderFactory
@@ -19,7 +20,14 @@ public class RpcProviderFactory {
      */
     private String accessToken;
 
+    /**
+     * 序列化
+     */
     private IPeachJobRpcSerializer serializer;
+
+    public void init(String ip, int port, String accessToken, IPeachJobRpcSerializer serializer) {
+
+    }
 
     public String getIp() {
         return ip;
@@ -36,4 +44,15 @@ public class RpcProviderFactory {
     public IPeachJobRpcSerializer getSerializer() {
         return serializer;
     }
+
+    //----------------------------------------RPC server----------------------------------------------
+
+    private BaseServer server;
+
+    public void stop() throws Exception {
+        // stop server
+        server.stop();
+    }
+
+
 }

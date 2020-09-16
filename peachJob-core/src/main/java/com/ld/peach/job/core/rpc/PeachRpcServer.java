@@ -38,7 +38,6 @@ public class PeachRpcServer extends BaseServer {
 
     @Override
     public void start(final RpcProviderFactory rpcProviderFactory) throws Exception {
-
         thread = new Thread(() -> {
 
             //create thread pool
@@ -84,9 +83,9 @@ public class PeachRpcServer extends BaseServer {
                 future.channel().closeFuture().sync();
             } catch (Exception e) {
                 if (e instanceof InterruptedException) {
-                    LOGGER.info("Jobs rpc remoting server stop.");
+                    LOGGER.info("PreachJob rpc remoting server stop.");
                 } else {
-                    LOGGER.error("Jobs rpc remoting server error.", e);
+                    LOGGER.error("PreachJob rpc remoting server error.", e);
                 }
             } finally {
                 // stop
@@ -110,16 +109,10 @@ public class PeachRpcServer extends BaseServer {
 
     @Override
     public void stop() throws Exception {
-        // destroy server thread
         if (thread != null && thread.isAlive()) {
             thread.interrupt();
         }
 
         LOGGER.info("peach-rpc remoting server destroy success.");
-    }
-
-    public static void main(String[] args) {
-        RpcProviderFactory rpcProviderFactory = new RpcProviderFactory();
-
     }
 }
