@@ -1,7 +1,5 @@
-package com.ld.peach.job.core.server;
+package com.ld.peach.job.core.rpc;
 
-import com.ld.peach.job.core.rpc.IRpcCallBack;
-import com.ld.peach.job.core.rpc.RpcProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +25,14 @@ public abstract class Server {
      * 服务停止回调
      */
     private IRpcCallBack stoppedCallback;
+
+    public void setStartedCallback(IRpcCallBack startedCallback) {
+        this.startedCallback = startedCallback;
+    }
+
+    public void setStoppedCallback(IRpcCallBack stoppedCallback) {
+        this.stoppedCallback = stoppedCallback;
+    }
 
     /**
      * callback when started

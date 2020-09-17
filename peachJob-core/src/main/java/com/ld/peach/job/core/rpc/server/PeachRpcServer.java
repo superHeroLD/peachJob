@@ -1,11 +1,13 @@
-package com.ld.peach.job.core.rpc;
+package com.ld.peach.job.core.rpc.server;
 
 import com.ld.peach.job.core.exception.PeachRpcException;
 import com.ld.peach.job.core.params.PeachRpcRequest;
 import com.ld.peach.job.core.params.PeachRpcResponse;
+import com.ld.peach.job.core.rpc.RpcProviderFactory;
+import com.ld.peach.job.core.rpc.Server;
 import com.ld.peach.job.core.rpc.coder.DefaultDecoder;
 import com.ld.peach.job.core.rpc.coder.DefaultEncoder;
-import com.ld.peach.job.core.server.Server;
+import com.ld.peach.job.core.rpc.handler.RpcServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -40,15 +42,15 @@ public class PeachRpcServer extends Server {
         thread = new Thread(() -> {
 
             //create thread pool
-            final ThreadPoolExecutor serverHandlerPool = new ThreadPoolExecutor(
+            final ThreadPoolExecutor serverHandlerThreadPool = new ThreadPoolExecutor(
                     60,
                     300,
                     60L,
                     TimeUnit.SECONDS,
                     new LinkedBlockingQueue<>(1000),
-                    r -> new Thread(r, "peach-rpc-serverHandlerPool-" + r.hashCode()),
+                    r -> new Thread(r, "peach-rpc-serverHandler-ThreadPool-" + r.hashCode()),
                     (r, executor) -> {
-                        throw new PeachRpcException("peach-rpc-serverHandler ThreadPool is EXHAUSTED!");
+                        throw new PeachRpcException("peach-rpc-serverHandler-ThreadPool is EXHAUSTED!");
                     });
 
             EventLoopGroup bossGroup = new NioEventLoopGroup();
@@ -65,9 +67,8 @@ public class PeachRpcServer extends Server {
                                 channel.pipeline()
                                         .addLast(new IdleStateHandler(0, 0, 60, TimeUnit.SECONDS))
                                         .addLast(new DefaultDecoder(PeachRpcRequest.class, rpcProviderFactory.getSerializer()))
-                                        .addLast(new DefaultEncoder(PeachRpcResponse.class, rpcProviderFactory.getSerializer()));
-
-                                //TODO 增加方处理RPC Handler
+                                        .addLast(new DefaultEncoder(PeachRpcResponse.class, rpcProviderFactory.getSerializer()))
+                                        .addLast(new RpcServerHandler(rpcProviderFactory, serverHandlerThreadPool));
                             }
                         })
                         .childOption(ChannelOption.TCP_NODELAY, true)
@@ -91,7 +92,7 @@ public class PeachRpcServer extends Server {
             } finally {
                 // stop
                 try {
-                    serverHandlerPool.shutdown();
+                    serverHandlerThreadPool.shutdown();
                 } catch (Exception e) {
                     LOGGER.error(e.getMessage(), e);
                 }
@@ -116,5 +117,10 @@ public class PeachRpcServer extends Server {
 
         onStopped();
         LOGGER.info("peach-rpc remoting server destroy success.");
+    }
+
+
+    public static void main(String[] args) {
+
     }
 }
