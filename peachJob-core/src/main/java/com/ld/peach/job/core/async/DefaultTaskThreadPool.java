@@ -1,6 +1,9 @@
 package com.ld.peach.job.core.async;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
@@ -13,6 +16,8 @@ import java.util.function.*;
  * @Version 1.0
  */
 public class DefaultTaskThreadPool {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultTaskThreadPool.class);
 
     /**
      * 线程池核心线程数
@@ -28,7 +33,7 @@ public class DefaultTaskThreadPool {
     }
 
     private static class ThreadPoolHolder {
-        private static final ThreadPoolExecutor INSTANCE = new ThreadPoolExecutor(CORE_NUM, CORE_NUM,
+        private static final ThreadPoolExecutor INSTANCE = new ThreadPoolExecutor(CORE_NUM * 2, CORE_NUM * 4,
                 60, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>(DEFAULT_TASK_QUEUE_SIZE),
                 new DefaultTaskThreadFactory(),
@@ -45,9 +50,7 @@ public class DefaultTaskThreadPool {
             SecurityManager s = System.getSecurityManager();
             group = (s != null) ? s.getThreadGroup() :
                     Thread.currentThread().getThreadGroup();
-            namePrefix = "DefaultTaskThreadPool-" +
-                    poolNumber.getAndIncrement() +
-                    "-thread-";
+            namePrefix = "peachJob-task-ThreadPool-" + poolNumber.getAndIncrement() + "-thread-";
         }
 
         @Override

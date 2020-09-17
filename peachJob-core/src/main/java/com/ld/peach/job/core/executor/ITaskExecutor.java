@@ -1,6 +1,6 @@
 package com.ld.peach.job.core.executor;
 
-import com.ld.peach.job.core.exception.TaskException;
+import com.ld.peach.job.core.exception.PeachTaskException;
 import com.ld.peach.job.core.params.ExecutionParams;
 import com.ld.peach.job.core.params.TaskResponse;
 
@@ -19,7 +19,7 @@ public interface ITaskExecutor {
      *
      * @param params 执行参数
      * @return TaskResponse<T> 执行结果
-     * @throws TaskException Task异常
+     * @throws PeachTaskException Task异常
      */
-    TaskResponse run(ExecutionParams params) throws TaskException;
+    TaskResponse run(ExecutionParams params) throws PeachTaskException;
 }

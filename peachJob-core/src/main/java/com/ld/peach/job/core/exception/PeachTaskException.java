@@ -7,20 +7,20 @@ package com.ld.peach.job.core.exception;
  * @Date 2020/9/8
  * @Version 1.0
  */
-public class TaskException extends Exception {
+public class PeachTaskException extends Exception {
 
-    public TaskException() {
+    public PeachTaskException() {
     }
 
-    public TaskException(String message) {
+    public PeachTaskException(String message) {
         super(message);
     }
 
-    public TaskException(Throwable cause) {
+    public PeachTaskException(Throwable cause) {
         super(cause);
     }
 
-    public TaskException(String message, Throwable cause) {
+    public PeachTaskException(String message, Throwable cause) {
         super(message, cause);
     }
 }

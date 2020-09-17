@@ -1,6 +1,6 @@
 package com.ld.peach.job.core.handler;
 
-import com.ld.peach.job.core.exception.TaskException;
+import com.ld.peach.job.core.exception.PeachTaskException;
 import com.ld.peach.job.core.params.TaskResponse;
 
 /**
@@ -18,7 +18,7 @@ public interface ITaskHandler {
      *
      * @param params 入参
      * @return 执行结果
-     * @throws TaskException 任务异常
+     * @throws PeachTaskException 任务异常
      */
     TaskResponse exectue(String params) throws Exception;
 }

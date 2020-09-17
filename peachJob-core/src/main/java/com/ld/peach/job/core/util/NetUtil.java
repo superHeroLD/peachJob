@@ -9,7 +9,7 @@ import java.net.ServerSocket;
 
 /**
  * @ClassName NetUtil
- * @Description TODO
+ * @Description 网络相关工具类
  * @Author lidong
  * @Date 2020/9/16
  * @Version 1.0

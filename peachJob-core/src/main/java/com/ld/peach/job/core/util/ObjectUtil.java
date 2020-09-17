@@ -2,7 +2,7 @@ package com.ld.peach.job.core.util;
 
 /**
  * @ClassName ObjectUtil
- * @Description 对象工具类
+ * @Description Utils for operator Object
  * @Author lidong
  * @Date 2020/9/11
  * @Version 1.0
