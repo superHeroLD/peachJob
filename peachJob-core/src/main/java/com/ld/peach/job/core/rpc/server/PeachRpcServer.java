@@ -118,9 +118,4 @@ public class PeachRpcServer extends Server {
         onStopped();
         LOGGER.info("peach-rpc remoting server destroy success.");
     }
-
-
-    public static void main(String[] args) {
-
-    }
 }
