@@ -77,7 +77,7 @@ public class PeachRpcServer extends Server {
                 // bind
                 ChannelFuture future = bootstrap.bind(rpcProviderFactory.getPort()).sync();
 
-                LOGGER.info("PreachJob rpc remoting server start success, port: [{}]", rpcProviderFactory.getPort());
+                LOGGER.info("peach-job rpc remoting server start success, port: [{}]", rpcProviderFactory.getPort());
 
                 onStarted();
 
@@ -85,9 +85,9 @@ public class PeachRpcServer extends Server {
                 future.channel().closeFuture().sync();
             } catch (Exception e) {
                 if (e instanceof InterruptedException) {
-                    LOGGER.info("PreachJob rpc remoting server stop.");
+                    LOGGER.info("peach-rpc remoting server stop.");
                 } else {
-                    LOGGER.error("PreachJob rpc remoting server error.", e);
+                    LOGGER.error("peach-job rpc remoting server error.", e);
                 }
             } finally {
                 // stop
