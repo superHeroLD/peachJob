@@ -1,8 +1,8 @@
 package com.ld.peach.job.core.rpc.handler;
 
 import com.ld.peach.job.core.exception.helper.ExceptionHelper;
-import com.ld.peach.job.core.params.PeachRpcRequest;
-import com.ld.peach.job.core.params.PeachRpcResponse;
+import com.ld.peach.job.core.generic.PeachRpcRequest;
+import com.ld.peach.job.core.generic.PeachRpcResponse;
 import com.ld.peach.job.core.rpc.RpcProviderFactory;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

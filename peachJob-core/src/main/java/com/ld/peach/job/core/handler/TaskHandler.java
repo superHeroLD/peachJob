@@ -1,6 +1,6 @@
 package com.ld.peach.job.core.handler;
 
-import com.ld.peach.job.core.params.TaskResponse;
+import com.ld.peach.job.core.generic.TaskResponse;
 
 import java.lang.reflect.Method;
 

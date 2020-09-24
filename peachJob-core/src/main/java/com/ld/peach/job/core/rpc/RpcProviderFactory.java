@@ -2,8 +2,8 @@ package com.ld.peach.job.core.rpc;
 
 import com.ld.peach.job.core.exception.PeachRpcException;
 import com.ld.peach.job.core.exception.helper.ExceptionHelper;
-import com.ld.peach.job.core.params.PeachRpcRequest;
-import com.ld.peach.job.core.params.PeachRpcResponse;
+import com.ld.peach.job.core.generic.PeachRpcRequest;
+import com.ld.peach.job.core.generic.PeachRpcResponse;
 import com.ld.peach.job.core.rpc.registry.IServiceRegistry;
 import com.ld.peach.job.core.rpc.serialize.IPeachJobRpcSerializer;
 import com.ld.peach.job.core.rpc.server.PeachRpcServer;

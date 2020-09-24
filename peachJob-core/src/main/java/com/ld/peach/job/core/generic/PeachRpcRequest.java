@@ -1,4 +1,4 @@
-package com.ld.peach.job.core.params;
+package com.ld.peach.job.core.generic;
 
 import lombok.Data;
 

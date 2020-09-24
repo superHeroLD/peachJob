@@ -1,8 +1,8 @@
 package com.ld.peach.job.core.rpc.server;
 
 import com.ld.peach.job.core.exception.PeachRpcException;
-import com.ld.peach.job.core.params.PeachRpcRequest;
-import com.ld.peach.job.core.params.PeachRpcResponse;
+import com.ld.peach.job.core.generic.PeachRpcRequest;
+import com.ld.peach.job.core.generic.PeachRpcResponse;
 import com.ld.peach.job.core.rpc.RpcProviderFactory;
 import com.ld.peach.job.core.rpc.Server;
 import com.ld.peach.job.core.rpc.coder.DefaultDecoder;
