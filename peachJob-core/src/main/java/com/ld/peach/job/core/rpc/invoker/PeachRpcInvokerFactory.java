@@ -3,12 +3,15 @@ package com.ld.peach.job.core.rpc.invoker;
 import com.ld.peach.job.core.exception.PeachRpcException;
 import com.ld.peach.job.core.generic.PeachRpcFutureResponse;
 import com.ld.peach.job.core.generic.PeachRpcResponse;
+import com.ld.peach.job.core.rpc.IRpcCallBack;
 import com.ld.peach.job.core.rpc.registry.IServiceRegistry;
 import com.ld.peach.job.core.rpc.registry.impl.LocalServiceRegistry;
 import com.ld.peach.job.core.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.*;
@@ -64,6 +67,14 @@ public class PeachRpcInvokerFactory {
         }
 
         stopCallbackThreadPool();
+    }
+
+    // ---------------------- service registry ----------------------
+
+    private List<IRpcCallBack> stopCallbackList = new ArrayList<IRpcCallBack>();
+
+    public void addStopCallBack(IRpcCallBack callback) {
+        stopCallbackList.add(callback);
     }
 
 

@@ -38,6 +38,15 @@ public class IpUtil {
         return ip.concat(":").concat(String.valueOf(port));
     }
 
+    public static Object[] parseIpPort(String address){
+        String[] array = address.split(":");
+
+        String host = array[0];
+        int port = Integer.parseInt(array[1]);
+
+        return new Object[]{host, port};
+    }
+
     /**
      * get ip address
      *

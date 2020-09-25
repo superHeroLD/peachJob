@@ -1,5 +1,7 @@
 package com.ld.peach.job.core.rpc.invoker.reference;
 
+import com.ld.peach.job.core.rpc.invoker.PeachRpcInvokerFactory;
+import com.ld.peach.job.core.rpc.invoker.call.PeachRpcInvokeCallback;
 import com.ld.peach.job.core.rpc.serialize.IPeachJobRpcSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,22 @@ public class RpcReferenceBean {
 
     private String address;
     private String accessToken;
+
+    private PeachRpcInvokeCallback invokeCallback;
+
+    private PeachRpcInvokerFactory invokerFactory;
+
+    public PeachRpcInvokerFactory getInvokerFactory() {
+        return invokerFactory;
+    }
+
+    public IPeachJobRpcSerializer getSerializer() {
+        return serializer;
+    }
+
+    public long getTimeout() {
+        return timeout;
+    }
 
 
 }
