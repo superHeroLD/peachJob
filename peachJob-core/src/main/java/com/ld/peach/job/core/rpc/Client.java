@@ -5,7 +5,7 @@ import com.ld.peach.job.core.rpc.invoker.reference.RpcReferenceBean;
 
 /**
  * @ClassName Client
- * @Description TODO
+ * @Description 客户点
  * @Author lidong
  * @Date 2020/9/24
  * @Version 1.0

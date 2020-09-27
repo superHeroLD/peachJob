@@ -18,7 +18,7 @@ import java.util.concurrent.*;
 
 /**
  * @ClassName PeachRpcInvokerFactory
- * @Description TODO
+ * @Description 初始化服务注册信息
  * @Author lidong
  * @Date 2020/9/24
  * @Version 1.0
@@ -69,14 +69,12 @@ public class PeachRpcInvokerFactory {
         stopCallbackThreadPool();
     }
 
-    // ---------------------- service registry ----------------------
 
-    private List<IRpcCallBack> stopCallbackList = new ArrayList<IRpcCallBack>();
+    private List<IRpcCallBack> stopCallbackList = new ArrayList<>();
 
     public void addStopCallBack(IRpcCallBack callback) {
         stopCallbackList.add(callback);
     }
-
 
     private ConcurrentMap<String, PeachRpcFutureResponse> futureResponsePool = new ConcurrentHashMap<>();
 
@@ -114,12 +112,13 @@ public class PeachRpcInvokerFactory {
         futureResponsePool.remove(requestId);
     }
 
+    /**
+     * response callback ThreadPool
+     */
     private volatile static ThreadPoolExecutor responseCallbackThreadPool;
 
     public void executeResponseCallback(Runnable runnable) {
-
         if (Objects.isNull(responseCallbackThreadPool)) {
-
             synchronized (PeachRpcInvokerFactory.class) {
                 if (Objects.isNull(responseCallbackThreadPool)) {
                     responseCallbackThreadPool = new ThreadPoolExecutor(
@@ -140,7 +139,7 @@ public class PeachRpcInvokerFactory {
     }
 
     public void stopCallbackThreadPool() {
-        if (responseCallbackThreadPool != null) {
+        if (Objects.nonNull(responseCallbackThreadPool)) {
             responseCallbackThreadPool.shutdown();
         }
     }

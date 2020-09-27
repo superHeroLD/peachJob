@@ -17,7 +17,7 @@ import java.util.concurrent.TimeoutException;
  * @Date 2020/9/24
  * @Version 1.0
  */
-public class PeachRpcInvokeFuture<T> implements Future<T> {
+public class PeachRpcInvokeFuture implements Future {
 
     private final PeachRpcFutureResponse futureResponse;
 
@@ -46,7 +46,7 @@ public class PeachRpcInvokeFuture<T> implements Future<T> {
     }
 
     @Override
-    public T get() throws InterruptedException, ExecutionException {
+    public Object get() throws InterruptedException, ExecutionException {
         try {
             return get(-1, TimeUnit.MILLISECONDS);
         } catch (TimeoutException e) {
@@ -55,21 +55,19 @@ public class PeachRpcInvokeFuture<T> implements Future<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+    public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         try {
             PeachRpcResponse response = futureResponse.get(timeout, unit);
             if (StringUtil.isNotBlank(response.getErrorMsg())) {
                 throw new PeachRpcException(response.getErrorMsg());
             }
 
-            return (T) response.getResult();
+            return response.getResult();
         } finally {
             stop();
         }
     }
 
-    @SuppressWarnings("rawtypes")
     private static ThreadLocal<PeachRpcInvokeFuture> threadInvokerFuture = new ThreadLocal<>();
 
     /**
@@ -85,7 +83,6 @@ public class PeachRpcInvokeFuture<T> implements Future<T> {
     /**
      * set future
      */
-    @SuppressWarnings("rawtypes")
     public static void setFuture(PeachRpcInvokeFuture future) {
         threadInvokerFuture.set(future);
     }

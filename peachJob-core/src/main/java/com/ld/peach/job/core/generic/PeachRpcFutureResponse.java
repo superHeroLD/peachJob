@@ -10,14 +10,14 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * @ClassName PeachRpcFutureResponse
- * @Description TODO
+ * @Description TODO  这个类没有写完
  * @Author lidong
  * @Date 2020/9/24
  * @Version 1.0
  */
 public class PeachRpcFutureResponse implements Future<PeachRpcResponse> {
 
-    private PeachRpcInvokerFactory peachRpcInvokerFactory;
+    private PeachRpcInvokerFactory invokerFactory;
 
     private PeachRpcRequest request;
     private PeachRpcResponse response;
@@ -30,6 +30,24 @@ public class PeachRpcFutureResponse implements Future<PeachRpcResponse> {
 
     private PeachRpcInvokeCallback invokeCallback;
 
+    public PeachRpcFutureResponse(final PeachRpcInvokerFactory invokerFactory, PeachRpcRequest request, PeachRpcInvokeCallback invokeCallback) {
+        this.invokerFactory = invokerFactory;
+        this.request = request;
+        this.invokeCallback = invokeCallback;
+
+        // set-InvokerFuture
+        setInvokerFuture();
+    }
+
+    // ---------------------- response pool ----------------------
+
+    public void setInvokerFuture() {
+        this.invokerFactory.setInvokerFuture(request.getRequestId(), this);
+    }
+
+    public void removeInvokerFuture() {
+        this.invokerFactory.removeInvokerFuture(request.getRequestId());
+    }
 
     @Override
     public boolean cancel(boolean mayInterruptIfRunning) {
@@ -67,4 +85,6 @@ public class PeachRpcFutureResponse implements Future<PeachRpcResponse> {
     public PeachRpcInvokeCallback getInvokeCallback() {
         return invokeCallback;
     }
+
+
 }
