@@ -1,6 +1,6 @@
 package com.ld.peach.job.core.model.builder;
 
-import com.ld.peach.job.core.constant.JobConstant;
+import com.ld.peach.job.core.constant.TaskConstant;
 import com.ld.peach.job.core.model.TaskInfo;
 import com.ld.peach.job.core.util.date.DateUtil;
 import com.ld.peach.job.core.util.StringUtil;
@@ -146,7 +146,7 @@ public final class PeachTaskBuilder {
         final String taskHandler = builder.taskHandler;
         final String taskName = builder.taskName;
         final String executeParams = builder.executeParams;
-        final Integer maxRetryNum = Objects.nonNull(builder.maxRetryNum) ? builder.maxRetryNum : JobConstant.MAX_RETRY_NUM;
+        final Integer maxRetryNum = Objects.nonNull(builder.maxRetryNum) ? builder.maxRetryNum : TaskConstant.MAX_RETRY_NUM;
         final Short executionStrategy = builder.executionStrategy;
 
         TaskInfo taskInfo = new TaskInfo();

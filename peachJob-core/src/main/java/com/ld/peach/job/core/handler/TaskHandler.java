@@ -1,5 +1,6 @@
 package com.ld.peach.job.core.handler;
 
+import com.ld.peach.job.core.exception.PeachTaskException;
 import com.ld.peach.job.core.generic.TaskResponse;
 
 import java.lang.reflect.Method;
@@ -34,8 +35,12 @@ public class TaskHandler implements ITaskHandler {
      * @param params 入参
      */
     @Override
-    public TaskResponse exectue(String params) throws Exception {
-        method.invoke(target, params);
-        return TaskResponse.success();
+    public TaskResponse execute(String tenantId, String params) throws PeachTaskException {
+        try {
+            method.invoke(target, params);
+            return TaskResponse.success();
+        } catch (Exception ex) {
+            throw new PeachTaskException(ex);
+        }
     }
 }

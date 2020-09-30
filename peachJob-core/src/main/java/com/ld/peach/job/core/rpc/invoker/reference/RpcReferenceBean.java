@@ -89,7 +89,6 @@ public class RpcReferenceBean {
         return iface;
     }
 
-
     public RpcReferenceBean(IPeachJobRpcSerializer serializer,
                             CallType callType,
                             Class<?> iface,
@@ -155,7 +154,7 @@ public class RpcReferenceBean {
     public Object getObject() {
         return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{iface}, (proxy, method, args) -> {
             String className = method.getDeclaringClass().getName();
-            String varsion = version;
+            String tmpVersion = version;
             String methodName = method.getName();
             Class<?>[] parameterTypes = method.getParameterTypes();
             Object[] parameters = args;
@@ -174,7 +173,7 @@ public class RpcReferenceBean {
                 }
 
                 className = (String) args[0];
-                varsion = (String) args[1];
+                tmpVersion = (String) args[1];
                 methodName = (String) args[2];
                 parameterTypes = paramTypes;
                 parameters = (Object[]) args[4];
@@ -192,7 +191,7 @@ public class RpcReferenceBean {
             if (StringUtil.isBlank(finalAddress)) {
                 if (invokerFactory != null && invokerFactory.getServiceRegistry() != null) {
                     // discovery
-                    String serviceKey = RpcProviderFactory.makeServiceKey(className, version);
+                    String serviceKey = RpcProviderFactory.makeServiceKey(className, tmpVersion);
                     TreeSet<String> addressSet = invokerFactory.getServiceRegistry().discovery(serviceKey);
                     // load balance
                     if (addressSet == null || addressSet.size() == 0) {
@@ -220,9 +219,9 @@ public class RpcReferenceBean {
             rpcRequest.setParameters(parameters);
 
             // send
-            if (CallType.SYNC == callType) {
-                // future-response set
+            if (CallType.SYNC.equals(callType)) {
                 PeachRpcFutureResponse futureResponse = new PeachRpcFutureResponse(invokerFactory, rpcRequest, null);
+
                 try {
                     // do invoke
                     client.asyncSend(finalAddress, rpcRequest);
@@ -238,11 +237,9 @@ public class RpcReferenceBean {
                     LOGGER.info("peach-rpc, invoke error, address: [{}] callType: [{}] RPC Request: {}", finalAddress, callType, rpcRequest);
                     throw (e instanceof PeachRpcException) ? e : new PeachRpcException(e);
                 } finally {
-                    // future-response remove
                     futureResponse.removeInvokerFuture();
                 }
-            } else if (CallType.FUTURE == callType) {
-                // future-response set
+            } else if (CallType.FUTURE.equals(callType)) {
                 PeachRpcFutureResponse futureResponse = new PeachRpcFutureResponse(invokerFactory, rpcRequest, null);
                 try {
                     // invoke future set
@@ -260,14 +257,15 @@ public class RpcReferenceBean {
                     futureResponse.removeInvokerFuture();
                     throw (e instanceof PeachRpcException) ? e : new PeachRpcException(e);
                 }
-            } else if (CallType.CALLBACK == callType) {
+            } else if (CallType.CALLBACK.equals(callType)) {
                 PeachRpcInvokeCallback finalInvokeCallback = invokeCallback;
                 PeachRpcInvokeCallback threadInvokeCallback = PeachRpcInvokeCallback.getCallback();
+
                 if (threadInvokeCallback != null) {
                     finalInvokeCallback = threadInvokeCallback;
                 }
                 if (finalInvokeCallback == null) {
-                    throw new PeachRpcException("peach-rpc JobsRpcInvokeCallback（CallType=" + CallType.CALLBACK.name() + "） cannot be null.");
+                    throw new PeachRpcException("peach-rpc RpcInvokeCallback（CallType=" + CallType.CALLBACK.name() + "） cannot be null.");
                 }
 
                 // future-response set
@@ -275,7 +273,7 @@ public class RpcReferenceBean {
                 try {
                     client.asyncSend(finalAddress, rpcRequest);
                 } catch (Exception e) {
-                    LOGGER.info("peach-rpc, invoke error, address:{}, JobsRpcRequest{}", finalAddress, rpcRequest);
+                    LOGGER.info("peach-rpc, invoke error, address: [{}] callType: [{}] RPC Request: {}", finalAddress, callType, rpcRequest);
 
                     // future-response remove
                     futureResponse.removeInvokerFuture();
@@ -283,7 +281,7 @@ public class RpcReferenceBean {
                 }
 
                 return null;
-            } else if (CallType.ONEWAY == callType) {
+            } else if (CallType.ONE_WAY.equals(callType)) {
                 client.asyncSend(finalAddress, rpcRequest);
                 return null;
             } else {

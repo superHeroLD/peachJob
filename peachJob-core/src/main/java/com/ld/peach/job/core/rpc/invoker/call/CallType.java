@@ -14,7 +14,7 @@ public enum CallType {
     SYNC("同步"),
     FUTURE("异步"),
     CALLBACK("回调"),
-    ONEWAY("单向请求");
+    ONE_WAY("单向请求");
 
     CallType(String desc) {
         this.desc = desc;

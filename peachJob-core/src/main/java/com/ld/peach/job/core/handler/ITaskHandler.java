@@ -1,5 +1,6 @@
 package com.ld.peach.job.core.handler;
 
+import com.ld.peach.job.core.exception.PeachRpcException;
 import com.ld.peach.job.core.exception.PeachTaskException;
 import com.ld.peach.job.core.generic.TaskResponse;
 
@@ -20,5 +21,5 @@ public interface ITaskHandler {
      * @return 执行结果
      * @throws PeachTaskException 任务异常
      */
-    TaskResponse exectue(String params) throws Exception;
+    TaskResponse execute(String tenantId, String params) throws PeachTaskException;
 }

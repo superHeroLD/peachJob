@@ -19,8 +19,8 @@ public enum ResponseCode {
     /**
      * 请求响应码
      */
-    SUCCESS(JobConstant.CODE_SUCCESS, "成功"),
-    FAIL(JobConstant.CODE_FAILED, "失败");
+    SUCCESS(TaskConstant.CODE_SUCCESS, "成功"),
+    FAIL(TaskConstant.CODE_FAILED, "失败");
 
     private final int code;
 
