@@ -3,6 +3,7 @@ package com.ld.peach.job.core.executor;
 import com.ld.peach.job.core.constant.TaskConstant;
 import com.ld.peach.job.core.handler.ITaskHandler;
 import com.ld.peach.job.core.rpc.RpcProviderFactory;
+import com.ld.peach.job.core.rpc.invoker.PeachRpcInvokerFactory;
 import com.ld.peach.job.core.rpc.invoker.call.CallType;
 import com.ld.peach.job.core.rpc.invoker.reference.RpcReferenceBean;
 import com.ld.peach.job.core.rpc.registry.ExecutorRegistryThread;
@@ -12,6 +13,7 @@ import com.ld.peach.job.core.service.ITaskService;
 import com.ld.peach.job.core.util.IpUtil;
 import com.ld.peach.job.core.util.NetUtil;
 import com.ld.peach.job.core.util.StringUtil;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Date 2020/9/8
  * @Version 1.0
  */
+@Data
 public abstract class AbstractTaskExecutor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTaskExecutor.class);
@@ -62,7 +65,7 @@ public abstract class AbstractTaskExecutor {
     /**
      * 启动
      *
-     * @throws Exception
+     * @throws Exception Exception
      */
     public void start() throws Exception {
         // init invoker, admin-client
@@ -72,6 +75,34 @@ public abstract class AbstractTaskExecutor {
         port = port > 0 ? port : NetUtil.findAvailablePort(9999);
         ip = (StringUtil.isNotBlank(ip)) ? ip : IpUtil.getIp();
         initRpcProvider(ip, port, app, accessToken);
+    }
+
+    /**
+     * 销毁
+     */
+    public void destroy() {
+        TASKS_HANDLER.clear();
+
+        stopRpcProvider();
+
+        stopInvokerFactory();
+    }
+
+    private void stopRpcProvider() {
+        try {
+            rpcProviderFactory.stop();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+
+    private void stopInvokerFactory() {
+        // stop invoker factory
+        try {
+            PeachRpcInvokerFactory.getInstance().stop();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
 
     /**
@@ -169,13 +200,6 @@ public abstract class AbstractTaskExecutor {
 
     }
 
-    private void stopRpcProvider() {
-        try {
-            rpcProviderFactory.stop();
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-    }
 
     /**
      * jobsHandler cache
