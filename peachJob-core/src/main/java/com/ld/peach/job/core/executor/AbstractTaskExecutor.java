@@ -5,6 +5,7 @@ import com.ld.peach.job.core.handler.ITaskHandler;
 import com.ld.peach.job.core.rpc.RpcProviderFactory;
 import com.ld.peach.job.core.rpc.invoker.call.CallType;
 import com.ld.peach.job.core.rpc.invoker.reference.RpcReferenceBean;
+import com.ld.peach.job.core.rpc.registry.ExecutorRegistryThread;
 import com.ld.peach.job.core.rpc.registry.IServiceRegistry;
 import com.ld.peach.job.core.rpc.serialize.IPeachJobRpcSerializer;
 import com.ld.peach.job.core.service.ITaskService;
@@ -78,7 +79,7 @@ public abstract class AbstractTaskExecutor {
      */
     private static List<ITaskService> TASK_SERVICE;
 
-    public static List<ITaskService> getJobsServiceList() {
+    public static List<ITaskService> getTaskServiceList() {
         return TASK_SERVICE;
     }
 
@@ -102,6 +103,7 @@ public abstract class AbstractTaskExecutor {
                             null,
                             null
                     ).getObject();
+
                     TASK_SERVICE.add(jobsAdmin);
                 }
             }
@@ -121,8 +123,7 @@ public abstract class AbstractTaskExecutor {
         serviceRegistryParam.put("address", IpUtil.getIpPort(ip, port));
 
         rpcProviderFactory = new RpcProviderFactory();
-        rpcProviderFactory.initConfig(getRpcSerializer(),
-                ip, port, accessToken, ExecutorServiceRegistry.class, serviceRegistryParam);
+        rpcProviderFactory.initConfig(getRpcSerializer(), ip, port, accessToken, ExecutorServiceRegistry.class, serviceRegistryParam);
 
         // add services
         rpcProviderFactory.addService(ITaskExecutor.class.getName(), null, new TaskExecutor());
@@ -138,12 +139,12 @@ public abstract class AbstractTaskExecutor {
 
         @Override
         public void start(Map<String, String> param) {
-            // start registry
+            ExecutorRegistryThread.getInstance().start(param.get("appName"), param.get("address"));
         }
 
         @Override
         public void stop() {
-            // stop registry
+            ExecutorRegistryThread.getInstance().stop();
         }
 
         @Override
@@ -181,13 +182,12 @@ public abstract class AbstractTaskExecutor {
      */
     private static Map<String, ITaskHandler> TASKS_HANDLER = new ConcurrentHashMap<>();
 
-    public static ITaskHandler putJobsHandler(String name, ITaskHandler jobHandler) {
-        LOGGER.debug("tasks handler register success, name:{}", name);
+    public static ITaskHandler putTaskHandler(String name, ITaskHandler jobHandler) {
+        LOGGER.info("tasks handler register success, name:{}", name);
         return TASKS_HANDLER.put(name, jobHandler);
     }
 
-    public static ITaskHandler getJobsHandler(String name) {
+    public static ITaskHandler getTaskHandler(String name) {
         return TASKS_HANDLER.get(name);
     }
-
 }

@@ -19,6 +19,11 @@ public interface TaskConstant {
     int CODE_FAILED = -1;
 
     /**
+     * 心跳时长
+     */
+    int BEAT_TIMEOUT = 30;
+
+    /**
      * 最大重试次数
      */
     int MAX_RETRY_NUM = 10;

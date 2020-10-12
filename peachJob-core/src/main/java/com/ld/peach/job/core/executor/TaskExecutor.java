@@ -32,7 +32,7 @@ public class TaskExecutor implements ITaskExecutor {
         if (Objects.isNull(triggerParam)) {
             throw new PeachTaskException("TaskExecutor execute triggerParam is null");
         }
-        ITaskHandler taskHandler = AbstractTaskExecutor.getJobsHandler(triggerParam.getHandler());
+        ITaskHandler taskHandler = AbstractTaskExecutor.getTaskHandler(triggerParam.getHandler());
         if (Objects.isNull(taskHandler)) {
             throw new PeachTaskException("TaskExecutor not found execute handler:" + triggerParam.getHandler());
         }

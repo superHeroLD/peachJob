@@ -2,7 +2,7 @@ package com.ld.peach.job.core.constant;
 
 /**
  * @EnumName RegisterStatusEnum
- * @Description TODO
+ * @Description 服务注册状态
  * @Author lidong
  * @Date 2020/9/28
  * @Version 1.0
