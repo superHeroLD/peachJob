@@ -228,6 +228,11 @@ public class RpcReferenceBean {
 
                     // future get
                     PeachRpcResponse rpcResponse = futureResponse.get(timeout, TimeUnit.MILLISECONDS);
+
+                    if (Objects.isNull(rpcResponse)) {
+                        throw new PeachRpcException(String.format("no response from address: [%s]", finalAddress));
+                    }
+
                     if (StringUtil.isNotBlank(rpcResponse.getErrorMsg())) {
                         throw new PeachRpcException(rpcResponse.getErrorMsg());
                     }

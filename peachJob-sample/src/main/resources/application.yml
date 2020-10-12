@@ -1,0 +1,13 @@
+# web port
+server:
+  port: 7788
+
+### jobs
+peach-job:
+  admin-address: http://127.0.0.1:8088
+  app-name: peach-job-sample
+  app-port: 9876
+
+# log config
+logging:
+  config: classpath:logback.xml

@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @ClassName PeachJobAutoConfiguration
- * @Description TODO
+ * @Description spring 自动装配
  * @Author lidong
  * @Date 2020/10/12
  * @Version 1.0

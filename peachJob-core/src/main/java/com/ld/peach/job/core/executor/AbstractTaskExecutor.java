@@ -119,6 +119,7 @@ public abstract class AbstractTaskExecutor {
             if (Objects.isNull(TASK_SERVICE)) {
                 TASK_SERVICE = new ArrayList<>();
             }
+
             String[] addressArr = adminAddress.trim().split(TaskConstant.COMMA);
             for (String address : addressArr) {
                 if (StringUtil.isNotBlank(address)) {

@@ -4,10 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.Inet6Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.UnknownHostException;
+import java.net.*;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.regex.Pattern;
 
@@ -50,8 +48,12 @@ public class IpUtil {
      * @param address 地址
      * @return 数组
      */
-    public static Object[] parseIpPort(String address) {
+    public static Object[] parseIpPort(String address) throws MalformedURLException {
+        LOGGER.info("[IpUtil] parseIpPort receive address: {}", address);
         String[] array = address.split(":");
+        if (array.length > 0) {
+            Arrays.stream(array).forEach(str -> LOGGER.info("[IpUtil] str: {}", str));
+        }
 
         String host = array[0];
         int port = Integer.parseInt(array[1]);

@@ -15,6 +15,7 @@
     <modules>
         <module>peachJob-core</module>
         <module>peachJob-admin</module>
+        <module>peachJob-sample</module>
     </modules>
 
     <licenses>

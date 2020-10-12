@@ -3,16 +3,14 @@ package com.ld.peach.job.core.starter;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+
 /**
- * Job 启动参数
- *
- * @author xxl jobob
- * @since 2019-06-08
+ * 启动参数
  */
 @Data
 @ConfigurationProperties(JobsProperties.PREFIX)
 public class JobsProperties {
-    public static final String PREFIX = "peach.job";
+    public static final String PREFIX = "peach-job";
 
     /**
      * admin 访问token
