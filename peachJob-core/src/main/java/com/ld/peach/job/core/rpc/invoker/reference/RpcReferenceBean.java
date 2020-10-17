@@ -6,7 +6,7 @@ import com.ld.peach.job.core.generic.PeachRpcRequest;
 import com.ld.peach.job.core.generic.PeachRpcResponse;
 import com.ld.peach.job.core.rpc.Client;
 import com.ld.peach.job.core.rpc.RpcProviderFactory;
-import com.ld.peach.job.core.rpc.client.PeachRpcClient;
+import com.ld.peach.job.core.rpc.client.http.PeachHttpClient;
 import com.ld.peach.job.core.rpc.invoker.PeachRpcInvokerFactory;
 import com.ld.peach.job.core.rpc.invoker.call.CallType;
 import com.ld.peach.job.core.rpc.invoker.call.PeachRpcInvokeCallback;
@@ -144,7 +144,7 @@ public class RpcReferenceBean {
      */
     private void initClient() {
         try {
-            client = new PeachRpcClient(this);
+            client = new PeachHttpClient(this);
         } catch (Exception e) {
             throw new PeachRpcException(e);
         }
@@ -226,6 +226,8 @@ public class RpcReferenceBean {
                     // do invoke
                     client.asyncSend(finalAddress, rpcRequest);
 
+                    //TODO 这里其实还是异步的，要等待一下
+                    Thread.sleep(5 * 1000);
                     // future get
                     PeachRpcResponse rpcResponse = futureResponse.get(timeout, TimeUnit.MILLISECONDS);
 
@@ -242,7 +244,7 @@ public class RpcReferenceBean {
                     LOGGER.info("peach-rpc, invoke error, address: [{}] callType: [{}] RPC Request: {}", finalAddress, callType, rpcRequest);
                     throw (e instanceof PeachRpcException) ? e : new PeachRpcException(e);
                 } finally {
-                    futureResponse.removeInvokerFuture();
+//                    futureResponse.removeInvokerFuture();
                 }
             } else if (CallType.FUTURE.equals(callType)) {
                 PeachRpcFutureResponse futureResponse = new PeachRpcFutureResponse(invokerFactory, rpcRequest, null);
@@ -259,7 +261,7 @@ public class RpcReferenceBean {
                     LOGGER.info("peach-rpc, invoke error, address: [{}] callType: [{}] RPC Request: {}", finalAddress, callType, rpcRequest);
 
                     // future-response remove
-                    futureResponse.removeInvokerFuture();
+//                    futureResponse.removeInvokerFuture();
                     throw (e instanceof PeachRpcException) ? e : new PeachRpcException(e);
                 }
             } else if (CallType.CALLBACK.equals(callType)) {
@@ -281,7 +283,7 @@ public class RpcReferenceBean {
                     LOGGER.info("peach-rpc, invoke error, address: [{}] callType: [{}] RPC Request: {}", finalAddress, callType, rpcRequest);
 
                     // future-response remove
-                    futureResponse.removeInvokerFuture();
+//                    futureResponse.removeInvokerFuture();
                     throw (e instanceof PeachRpcException) ? e : new PeachRpcException(e);
                 }
 

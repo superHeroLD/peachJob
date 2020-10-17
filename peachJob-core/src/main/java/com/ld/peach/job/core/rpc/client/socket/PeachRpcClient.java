@@ -1,4 +1,4 @@
-package com.ld.peach.job.core.rpc.client;
+package com.ld.peach.job.core.rpc.client.socket;
 
 import com.ld.peach.job.core.exception.PeachRpcException;
 import com.ld.peach.job.core.generic.PeachRpcRequest;

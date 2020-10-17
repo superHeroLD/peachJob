@@ -1,4 +1,4 @@
-package com.ld.peach.job.core.rpc.client;
+package com.ld.peach.job.core.rpc.client.socket;
 
 import com.ld.peach.job.core.generic.PeachRpcRequest;
 import com.ld.peach.job.core.generic.PeachRpcResponse;
@@ -8,6 +8,7 @@ import com.ld.peach.job.core.rpc.common.ConnectClient;
 import com.ld.peach.job.core.rpc.handler.PeachClientHandler;
 import com.ld.peach.job.core.rpc.invoker.PeachRpcInvokerFactory;
 import com.ld.peach.job.core.rpc.serialize.IPeachJobRpcSerializer;
+import com.ld.peach.job.core.util.IpUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -20,7 +21,6 @@ import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URL;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -40,13 +40,9 @@ public class PeachConnectClient extends ConnectClient {
 
     @Override
     public void init(String address, final IPeachJobRpcSerializer serializer, final PeachRpcInvokerFactory rpcInvokerFactory) throws Exception {
-        if (!address.toLowerCase().startsWith("http")) {
-            address = "http://" + address;
-        }
-
-        URL url = new URL(address);
-        String host = url.getHost();
-        int port = url.getPort() > -1 ? url.getPort() : 80;
+        Object[] array = IpUtil.parseIpPort(address);
+        String host = (String) array[0];
+        int port = (int) array[1];
 
         this.group = new NioEventLoopGroup();
         Bootstrap bootstrap = new Bootstrap();

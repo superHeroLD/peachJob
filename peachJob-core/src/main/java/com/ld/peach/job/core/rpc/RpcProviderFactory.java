@@ -6,7 +6,7 @@ import com.ld.peach.job.core.generic.PeachRpcRequest;
 import com.ld.peach.job.core.generic.PeachRpcResponse;
 import com.ld.peach.job.core.rpc.registry.IServiceRegistry;
 import com.ld.peach.job.core.rpc.serialize.IPeachJobRpcSerializer;
-import com.ld.peach.job.core.rpc.server.PeachRpcServer;
+import com.ld.peach.job.core.rpc.server.PeachHttpServer;
 import com.ld.peach.job.core.util.IpUtil;
 import com.ld.peach.job.core.util.NetUtil;
 import com.ld.peach.job.core.util.StringUtil;
@@ -137,7 +137,7 @@ public class RpcProviderFactory {
     public void start() throws Exception {
         // start server
         serviceAddress = IpUtil.getIpPort(this.ip, port);
-        server = new PeachRpcServer();
+        server = new PeachHttpServer();
         // serviceRegistry started
         server.setStartedCallback(() -> {
             // start registry
@@ -243,7 +243,7 @@ public class RpcProviderFactory {
             Object result = method.invoke(serviceBean, parameters);
             jobsRpcResponse.setResult(result);
         } catch (Throwable t) {
-            LOGGER.error("Jobs rpc provider invokeService error.", t);
+            LOGGER.error("peach rpc provider invokeService error.", t);
             jobsRpcResponse.setErrorMsg(ExceptionHelper.getErrorInfo(t));
         }
         return jobsRpcResponse;

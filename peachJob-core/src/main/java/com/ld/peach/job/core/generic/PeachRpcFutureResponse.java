@@ -42,7 +42,7 @@ public class PeachRpcFutureResponse implements Future<PeachRpcResponse> {
     // ---------------------- response pool ----------------------
 
     public void setInvokerFuture() {
-        this.invokerFactory.setInvokerFuture(request.getRequestId(), this);
+         this.invokerFactory.setInvokerFuture(request.getRequestId(), this);
     }
 
     public void removeInvokerFuture() {
@@ -66,12 +66,12 @@ public class PeachRpcFutureResponse implements Future<PeachRpcResponse> {
 
     @Override
     public PeachRpcResponse get() throws InterruptedException, ExecutionException {
-        return null;
+        return response;
     }
 
     @Override
     public PeachRpcResponse get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-        return null;
+        return response;
     }
 
     public void setResponse(PeachRpcResponse response) {
