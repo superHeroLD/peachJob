@@ -15,8 +15,7 @@ import com.ld.peach.job.core.rpc.invoker.common.PeachRpcGenericService;
 import com.ld.peach.job.core.rpc.serialize.IPeachJobRpcSerializer;
 import com.ld.peach.job.core.util.ClassUtil;
 import com.ld.peach.job.core.util.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Proxy;
 import java.util.Objects;
@@ -31,8 +30,8 @@ import java.util.concurrent.TimeUnit;
  * @Date 2020/9/24
  * @Version 1.0
  */
+@Slf4j
 public class RpcReferenceBean {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RpcReferenceBean.class);
 
     /**
      * 序列化协议 实现
@@ -181,7 +180,7 @@ public class RpcReferenceBean {
 
             // filter method like "Object.toString()"
             if (className.equals(Object.class.getName())) {
-                LOGGER.info("peach-rpc proxy class-method not support [{}#{}]", className, methodName);
+                log.info("peach-rpc proxy class-method not support [{}#{}]", className, methodName);
                 throw new PeachRpcException("peach-rpc proxy class-method not support");
             }
 
@@ -239,7 +238,7 @@ public class RpcReferenceBean {
 
                     return rpcResponse.getResult();
                 } catch (Exception e) {
-                    LOGGER.info("peach-rpc, invoke error, address: [{}] callType: [{}] RPC Request: {}", finalAddress, callType, rpcRequest);
+                    log.info("peach-rpc, invoke error, address: [{}] callType: [{}] RPC Request: {}", finalAddress, callType, rpcRequest);
                     throw (e instanceof PeachRpcException) ? e : new PeachRpcException(e);
                 } finally {
                     futureResponse.removeInvokerFuture();
@@ -256,7 +255,7 @@ public class RpcReferenceBean {
 
                     return null;
                 } catch (Exception e) {
-                    LOGGER.info("peach-rpc, invoke error, address: [{}] callType: [{}] RPC Request: {}", finalAddress, callType, rpcRequest);
+                    log.info("peach-rpc, invoke error, address: [{}] callType: [{}] RPC Request: {}", finalAddress, callType, rpcRequest);
 
                     // future-response remove
                     futureResponse.removeInvokerFuture();
@@ -278,7 +277,7 @@ public class RpcReferenceBean {
                 try {
                     client.asyncSend(finalAddress, rpcRequest);
                 } catch (Exception e) {
-                    LOGGER.info("peach-rpc, invoke error, address: [{}] callType: [{}] RPC Request: {}", finalAddress, callType, rpcRequest);
+                    log.info("peach-rpc, invoke error, address: [{}] callType: [{}] RPC Request: {}", finalAddress, callType, rpcRequest);
 
                     // future-response remove
                     futureResponse.removeInvokerFuture();

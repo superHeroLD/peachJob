@@ -16,8 +16,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.timeout.IdleStateHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
 import java.net.URL;
@@ -30,9 +29,8 @@ import java.util.concurrent.TimeUnit;
  * @Date 2020/10/17
  * @Version 1.0
  */
+@Slf4j
 public class PeachHttpConnectClient extends ConnectClient {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PeachHttpConnectClient.class);
 
     private EventLoopGroup group;
     private Channel channel;
@@ -78,7 +76,7 @@ public class PeachHttpConnectClient extends ConnectClient {
             return;
         }
 
-        LOGGER.debug("peach rpc netty http client proxy, connect to server success at host:{}, port:{}", host, port);
+        log.debug("peach rpc netty http client proxy, connect to server success at host:{}, port:{}", host, port);
     }
 
 
@@ -101,7 +99,7 @@ public class PeachHttpConnectClient extends ConnectClient {
             this.group.shutdownGracefully();
         }
 
-        LOGGER.debug("peach rpc netty http client close.");
+        log.info("peach-rpc netty http client close.");
     }
 
 

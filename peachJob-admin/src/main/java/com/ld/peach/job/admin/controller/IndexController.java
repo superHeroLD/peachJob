@@ -1,7 +1,6 @@
 package com.ld.peach.job.admin.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,15 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
  * @Date 2020/9/7
  * @Version 1.0
  */
+@Slf4j
 @RestController
 @RequestMapping("/")
 public class IndexController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
-
     @GetMapping("/")
     public String index() {
-        LOGGER.info("Welcome to peachJob");
+        log.info("Welcome to peachJob");
         return "Welcome to peachJob";
     }
 

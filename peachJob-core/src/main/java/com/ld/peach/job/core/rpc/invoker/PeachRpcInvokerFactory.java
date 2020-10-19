@@ -7,8 +7,7 @@ import com.ld.peach.job.core.rpc.IRpcCallBack;
 import com.ld.peach.job.core.rpc.registry.IServiceRegistry;
 import com.ld.peach.job.core.rpc.registry.impl.LocalServiceRegistry;
 import com.ld.peach.job.core.util.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +22,8 @@ import java.util.concurrent.*;
  * @Date 2020/9/24
  * @Version 1.0
  */
+@Slf4j
 public class PeachRpcInvokerFactory {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PeachRpcInvokerFactory.class);
 
     private final Class<? extends IServiceRegistry> serviceRegistryClass;
     private final Map<String, String> serviceRegistryParam;
@@ -103,7 +101,7 @@ public class PeachRpcInvokerFactory {
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
         } else {
             futureResponse.setResponse(peachRpcResponse);

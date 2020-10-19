@@ -15,8 +15,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.timeout.IdleStateHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -29,9 +28,8 @@ import java.util.concurrent.TimeUnit;
  * @Date 2020/10/17
  * @Version 1.0
  */
+@Slf4j
 public class PeachHttpServer extends Server {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PeachHttpServer.class);
 
     private Thread thread;
 
@@ -71,28 +69,28 @@ public class PeachHttpServer extends Server {
                 // bind
                 ChannelFuture future = bootstrap.bind(rpcProviderFactory.getPort()).sync();
 
-                LOGGER.info("peach rpc remoting server start success, nettype = {}, port = {}", PeachHttpServer.class.getName(), rpcProviderFactory.getPort());
+                log.info("peach rpc remoting server start success, nettype = {}, port = {}", PeachHttpServer.class.getName(), rpcProviderFactory.getPort());
                 onStarted();
 
                 // wait util stop
                 future.channel().closeFuture().sync();
 
             } catch (InterruptedException e) {
-                LOGGER.info("peach rpc remoting server stop.");
+                log.info("peach rpc remoting server stop.");
             } finally {
                 // stop
                 try {
                     // shutdownNow
                     serverHandlerThreadPool.shutdown();
                 } catch (Exception e) {
-                    LOGGER.error(e.getMessage(), e);
+                    log.error(e.getMessage(), e);
                 }
 
                 try {
                     workerGroup.shutdownGracefully();
                     bossGroup.shutdownGracefully();
                 } catch (Exception e) {
-                    LOGGER.error(e.getMessage(), e);
+                    log.error(e.getMessage(), e);
                 }
             }
 
@@ -112,6 +110,6 @@ public class PeachHttpServer extends Server {
 
         // on stop
         onStopped();
-        LOGGER.info("peach rpc remoting http server destroy success.");
+        log.info("peach rpc remoting http server destroy success.");
     }
 }

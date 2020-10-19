@@ -1,11 +1,9 @@
 package com.ld.peach.job.core.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.regex.Pattern;
 
@@ -16,9 +14,8 @@ import java.util.regex.Pattern;
  * @Date 2020/9/16
  * @Version 1.0
  */
+@Slf4j
 public class IpUtil {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(IpUtil.class);
 
     private static final String ANY_HOST = "0.0.0.0";
 
@@ -49,11 +46,8 @@ public class IpUtil {
      * @return 数组
      */
     public static Object[] parseIpPort(String address) throws MalformedURLException {
-        LOGGER.info("[IpUtil] parseIpPort receive address: {}", address);
+        log.info("[IpUtil] parseIpPort receive address: {}", address);
         String[] array = address.split(":");
-        if (array.length > 0) {
-            Arrays.stream(array).forEach(str -> LOGGER.info("[IpUtil] str: {}", str));
-        }
 
         String host = array[0];
         int port = Integer.parseInt(array[1]);
@@ -123,7 +117,7 @@ public class IpUtil {
                 return InetAddress.getByName(addr.substring(0, i) + '%' + address.getScopeId());
             } catch (UnknownHostException e) {
                 // ignore
-                LOGGER.debug("Unknown IPV6 address: ", e);
+                log.debug("Unknown IPV6 address: ", e);
             }
         }
         return address;
@@ -160,7 +154,7 @@ public class IpUtil {
                 return localAddress;
             }
         } catch (Throwable e) {
-            LOGGER.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
@@ -183,15 +177,15 @@ public class IpUtil {
                                 return address;
                             }
                         } catch (Throwable e) {
-                            LOGGER.error(e.getMessage(), e);
+                            log.error(e.getMessage(), e);
                         }
                     }
                 } catch (Throwable e) {
-                    LOGGER.error(e.getMessage(), e);
+                    log.error(e.getMessage(), e);
                 }
             }
         } catch (Throwable e) {
-            LOGGER.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         return localAddress;
     }

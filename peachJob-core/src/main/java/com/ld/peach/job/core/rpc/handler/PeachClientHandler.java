@@ -5,8 +5,7 @@ import com.ld.peach.job.core.rpc.invoker.PeachRpcInvokerFactory;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleStateEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @ClassName PeachClientHandler
@@ -15,9 +14,8 @@ import org.slf4j.LoggerFactory;
  * @Date 2020/9/25
  * @Version 1.0
  */
+@Slf4j
 public class PeachClientHandler extends SimpleChannelInboundHandler<PeachRpcResponse> {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PeachClientHandler.class);
 
     private final PeachRpcInvokerFactory rpcInvokerFactory;
 
@@ -32,7 +30,7 @@ public class PeachClientHandler extends SimpleChannelInboundHandler<PeachRpcResp
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        LOGGER.error("peach rpc netty client caught exception", cause);
+        log.error("peach rpc netty client caught exception", cause);
         ctx.close();
     }
 
@@ -40,7 +38,7 @@ public class PeachClientHandler extends SimpleChannelInboundHandler<PeachRpcResp
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             ctx.channel().close();
-            LOGGER.debug("peach rpc netty client close an idle channel.");
+            log.debug("peach rpc netty client close an idle channel.");
         } else {
             super.userEventTriggered(ctx, evt);
         }

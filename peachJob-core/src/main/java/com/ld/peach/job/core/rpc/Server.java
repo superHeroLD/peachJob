@@ -1,7 +1,6 @@
 package com.ld.peach.job.core.rpc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 
@@ -12,9 +11,8 @@ import java.util.Objects;
  * @Date 2020/9/15
  * @Version 1.0
  */
+@Slf4j
 public abstract class Server {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
     /**
      * 服务启动回调
@@ -42,7 +40,7 @@ public abstract class Server {
             try {
                 startedCallback.execute();
             } catch (Exception e) {
-                LOGGER.error("PeachJob RPC server startedCallback occur error", e);
+                log.error("PeachJob RPC server startedCallback occur error", e);
             }
         }
     }
@@ -67,7 +65,7 @@ public abstract class Server {
             try {
                 stoppedCallback.execute();
             } catch (Exception e) {
-                LOGGER.error("PeachJob RPC server stoppedCallback occur error", e);
+                log.error("PeachJob RPC server stoppedCallback occur error", e);
             }
         }
     }

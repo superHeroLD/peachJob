@@ -17,8 +17,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -31,9 +30,8 @@ import java.util.concurrent.TimeUnit;
  * @Date 2020/9/15
  * @Version 1.0
  */
+@Slf4j
 public class PeachRpcServer extends Server {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PeachRpcServer.class);
 
     private Thread thread;
 
@@ -77,7 +75,7 @@ public class PeachRpcServer extends Server {
                 // bind
                 ChannelFuture future = bootstrap.bind(rpcProviderFactory.getPort()).sync();
 
-                LOGGER.info("peach-job rpc remoting server start success, port: [{}]", rpcProviderFactory.getPort());
+                log.info("peach-job rpc remoting server start success, port: [{}]", rpcProviderFactory.getPort());
 
                 onStarted();
 
@@ -85,22 +83,22 @@ public class PeachRpcServer extends Server {
                 future.channel().closeFuture().sync();
             } catch (Exception e) {
                 if (e instanceof InterruptedException) {
-                    LOGGER.info("peach-rpc remoting server stop.");
+                    log.info("peach-rpc remoting server stop.");
                 } else {
-                    LOGGER.error("peach-job rpc remoting server error.", e);
+                    log.error("peach-job rpc remoting server error.", e);
                 }
             } finally {
                 // stop
                 try {
                     serverHandlerThreadPool.shutdown();
                 } catch (Exception e) {
-                    LOGGER.error(e.getMessage(), e);
+                    log.error(e.getMessage(), e);
                 }
                 try {
                     workerGroup.shutdownGracefully();
                     bossGroup.shutdownGracefully();
                 } catch (Exception e) {
-                    LOGGER.error(e.getMessage(), e);
+                    log.error(e.getMessage(), e);
                 }
             }
         });
@@ -116,6 +114,6 @@ public class PeachRpcServer extends Server {
         }
 
         onStopped();
-        LOGGER.info("peach-rpc remoting server destroy success.");
+        log.info("peach-rpc remoting server destroy success.");
     }
 }

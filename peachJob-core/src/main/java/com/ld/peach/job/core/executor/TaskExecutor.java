@@ -4,8 +4,7 @@ import com.ld.peach.job.core.exception.PeachTaskException;
 import com.ld.peach.job.core.generic.TaskResponse;
 import com.ld.peach.job.core.generic.param.TriggerParam;
 import com.ld.peach.job.core.handler.ITaskHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 
@@ -16,10 +15,8 @@ import java.util.Objects;
  * @Date 2020/9/30
  * @Version 1.0
  */
+@Slf4j
 public class TaskExecutor implements ITaskExecutor {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TaskExecutor.class);
-
 
     /**
      * 执行任务调度

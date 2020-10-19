@@ -6,8 +6,7 @@ import com.ld.peach.job.core.executor.AbstractTaskExecutor;
 import com.ld.peach.job.core.model.params.RegistryParam;
 import com.ld.peach.job.core.service.ITaskService;
 import com.ld.peach.job.core.util.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,9 +17,8 @@ import java.util.concurrent.TimeUnit;
  * @Date 2020/10/12
  * @Version 1.0
  */
+@Slf4j
 public class ExecutorRegistryThread {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExecutorRegistryThread.class);
 
     private Thread registryThread;
 
@@ -43,12 +41,12 @@ public class ExecutorRegistryThread {
      */
     public void start(final String appName, final String address) {
         if (StringUtil.isBlank(appName)) {
-            LOGGER.warn("[ExecutorRegistryThread] app is null");
+            log.warn("[ExecutorRegistryThread] app is null");
             return;
         }
 
         if (StringUtil.isBlank(address)) {
-            LOGGER.warn("[ExecutorRegistryThread] address is null");
+            log.warn("[ExecutorRegistryThread] address is null");
             return;
         }
 
@@ -60,19 +58,19 @@ public class ExecutorRegistryThread {
                     for (ITaskService taskService : AbstractTaskExecutor.getTaskServiceList()) {
                         try {
                             if (taskService.registry(registryParam)) {
-                                LOGGER.info("[ExecutorRegistryThread] Task registry success, registryParam: {}", registryParam);
+                                log.info("[ExecutorRegistryThread] Task registry success, registryParam: {}", registryParam);
                                 break;
                             } else {
-                                LOGGER.info("[ExecutorRegistryThread] Task registry fail, registryParam: {}", registryParam);
+                                log.info("[ExecutorRegistryThread] Task registry fail, registryParam: {}", registryParam);
                             }
                         } catch (Exception e) {
-                            LOGGER.info("[ExecutorRegistryThread] Task registry error, registryParam: {}", registryParam, e);
+                            log.info("[ExecutorRegistryThread] Task registry error, registryParam: {}", registryParam, e);
                         }
 
                     }
                 } catch (Exception e) {
                     if (!toStop) {
-                        LOGGER.error(e.getMessage(), e);
+                        log.error(e.getMessage(), e);
                     }
                 }
 
@@ -82,7 +80,7 @@ public class ExecutorRegistryThread {
                     }
                 } catch (InterruptedException e) {
                     if (!toStop) {
-                        LOGGER.warn("[ExecutorRegistryThread] Task executor registry thread interrupted, error msg:{}", e.getMessage());
+                        log.warn("[ExecutorRegistryThread] Task executor registry thread interrupted, error msg:{}", e.getMessage());
                     }
                 }
             }
@@ -94,25 +92,25 @@ public class ExecutorRegistryThread {
                     try {
                         registryParam.setRegisterStatusEnum(RegisterStatusEnum.DISABLED);
                         if (taskService.removeApp(registryParam)) {
-                            LOGGER.info("[ExecutorRegistryThread] Task registry-remove success, registryParam: {}", registryParam);
+                            log.info("[ExecutorRegistryThread] Task registry-remove success, registryParam: {}", registryParam);
                             break;
                         } else {
-                            LOGGER.info("[ExecutorRegistryThread] Task registry-remove fail, registryParam: {}", registryParam);
+                            log.info("[ExecutorRegistryThread] Task registry-remove fail, registryParam: {}", registryParam);
                         }
                     } catch (Exception e) {
                         if (!toStop) {
-                            LOGGER.info("[ExecutorRegistryThread] Task registry-remove error, registryParam: {}", registryParam, e);
+                            log.info("[ExecutorRegistryThread] Task registry-remove error, registryParam: {}", registryParam, e);
                         }
                     }
 
                 }
             } catch (Exception e) {
                 if (!toStop) {
-                    LOGGER.error(e.getMessage(), e);
+                    log.error(e.getMessage(), e);
                 }
             }
 
-            LOGGER.info("[ExecutorRegistryThread] Task executor registry thread destroy");
+            log.info("[ExecutorRegistryThread] Task executor registry thread destroy");
         });
 
         registryThread.setDaemon(true);
@@ -130,7 +128,7 @@ public class ExecutorRegistryThread {
         try {
             registryThread.join();
         } catch (InterruptedException e) {
-            LOGGER.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
     }
 }

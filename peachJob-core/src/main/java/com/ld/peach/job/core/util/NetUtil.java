@@ -1,8 +1,7 @@
 package com.ld.peach.job.core.util;
 
 import com.ld.peach.job.core.exception.PeachRpcException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -14,8 +13,8 @@ import java.net.ServerSocket;
  * @Date 2020/9/16
  * @Version 1.0
  */
+@Slf4j
 public class NetUtil {
-    private static final Logger LOGGER = LoggerFactory.getLogger(NetUtil.class);
 
     /**
      * find avaliable port
@@ -50,14 +49,14 @@ public class NetUtil {
             serverSocket = new ServerSocket(port);
             used = false;
         } catch (IOException e) {
-            LOGGER.info("peach-rpc, port[{}] is in use.", port);
+            log.info("peach-rpc, port[{}] is in use.", port);
             used = true;
         } finally {
             if (serverSocket != null) {
                 try {
                     serverSocket.close();
                 } catch (IOException e) {
-                    LOGGER.info("");
+                    log.info("");
                 }
             }
         }

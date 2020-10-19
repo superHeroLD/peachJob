@@ -11,8 +11,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.timeout.IdleStateEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -24,10 +23,8 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @Date 2020/10/17
  * @Version 1.0
  */
+@Slf4j
 public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
-
-    private static final Logger logger = LoggerFactory.getLogger(HttpServerHandler.class);
-
 
     private final RpcProviderFactory rpcProviderFactory;
     private final ThreadPoolExecutor serverHandlerPool;
@@ -89,7 +86,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
                 writeResponse(ctx, keepAlive, responseBytes);
             }
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
 
             // response error
             PeachRpcResponse response = new PeachRpcResponse();
@@ -118,13 +115,13 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
     }
 
     @Override
-    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+    public void channelReadComplete(ChannelHandlerContext ctx) {
         ctx.flush();
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        logger.error("peach rpc provider netty_http server caught exception", cause);
+        log.error("peach rpc provider netty_http server caught exception", cause);
         ctx.close();
     }
 
@@ -133,7 +130,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
         if (evt instanceof IdleStateEvent) {
             // close idle channel
             ctx.channel().close();
-            logger.debug("peach rpc provider netty_http server close an idle channel.");
+            log.info("peach-rpc provider netty_http server close an idle channel.");
         } else {
             super.userEventTriggered(ctx, evt);
         }

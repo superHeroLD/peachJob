@@ -10,8 +10,7 @@ import com.ld.peach.job.core.rpc.server.PeachHttpServer;
 import com.ld.peach.job.core.util.IpUtil;
 import com.ld.peach.job.core.util.NetUtil;
 import com.ld.peach.job.core.util.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -25,9 +24,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Date 2020/9/15
  * @Version 1.0
  */
+@Slf4j
 public class RpcProviderFactory {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(RpcProviderFactory.class);
 
     private String ip;
 
@@ -199,7 +197,7 @@ public class RpcProviderFactory {
     public void addService(String iface, String version, Object serviceBean) {
         String serviceKey = makeServiceKey(iface, version);
         serviceData.put(serviceKey, serviceBean);
-        LOGGER.info("peach-rpc provider factory add service success. serviceKey: [{}], serviceBean: [{}] version: [{}]", serviceKey, serviceBean.getClass(), version);
+        log.info("peach-rpc provider factory add service success. serviceKey: [{}], serviceBean: [{}] version: [{}]", serviceKey, serviceBean.getClass(), version);
     }
 
     /**
@@ -243,7 +241,7 @@ public class RpcProviderFactory {
             Object result = method.invoke(serviceBean, parameters);
             jobsRpcResponse.setResult(result);
         } catch (Throwable t) {
-            LOGGER.error("peach rpc provider invokeService error.", t);
+            log.error("peach rpc provider invokeService error.", t);
             jobsRpcResponse.setErrorMsg(ExceptionHelper.getErrorInfo(t));
         }
         return jobsRpcResponse;

@@ -2,8 +2,7 @@ package com.ld.peach.job.core.executor;
 
 import com.ld.peach.job.core.handler.ITaskHandler;
 import com.ld.peach.job.core.rpc.serialize.IPeachJobRpcSerializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -19,9 +18,8 @@ import java.util.Objects;
  * @Date 2020/9/8
  * @Version 1.0
  */
+@Slf4j
 public class TaskSpringExecutor extends AbstractTaskExecutor implements ApplicationContextAware {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TaskSpringExecutor.class);
 
     @Autowired
     private IPeachJobRpcSerializer rpcSerializer;
@@ -59,7 +57,7 @@ public class TaskSpringExecutor extends AbstractTaskExecutor implements Applicat
      */
     private void initTaskHandlerRepository(ApplicationContext applicationContext) {
         if (Objects.isNull(applicationContext)) {
-            LOGGER.info("[TaskSpringExecutor] applicationContext is null");
+            log.info("[TaskSpringExecutor] applicationContext is null");
             return;
         }
 

@@ -18,8 +18,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -31,9 +30,8 @@ import java.util.concurrent.TimeUnit;
  * @Date 2020/9/25
  * @Version 1.0
  */
+@Slf4j
 public class PeachConnectClient extends ConnectClient {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PeachConnectClient.class);
 
     private EventLoopGroup group;
     private Channel channel;
@@ -68,7 +66,7 @@ public class PeachConnectClient extends ConnectClient {
             return;
         }
 
-        LOGGER.debug("Jobs rpc netty client proxy, connect to server success at host:{}, port:{}", host, port);
+        log.debug("Jobs rpc netty client proxy, connect to server success at host:{}, port:{}", host, port);
     }
 
 
@@ -90,7 +88,7 @@ public class PeachConnectClient extends ConnectClient {
             this.group.shutdownGracefully();
         }
 
-        LOGGER.debug("Jobs rpc netty client close.");
+        log.debug("Jobs rpc netty client close.");
     }
 
 

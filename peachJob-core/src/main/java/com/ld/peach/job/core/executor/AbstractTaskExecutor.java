@@ -14,8 +14,7 @@ import com.ld.peach.job.core.util.IpUtil;
 import com.ld.peach.job.core.util.NetUtil;
 import com.ld.peach.job.core.util.StringUtil;
 import lombok.Data;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,10 +26,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Date 2020/9/8
  * @Version 1.0
  */
+@Slf4j
 @Data
 public abstract class AbstractTaskExecutor {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTaskExecutor.class);
 
     /**
      * jobs admin address, such as "http://address" or "http://address01,http://address02"
@@ -92,7 +90,7 @@ public abstract class AbstractTaskExecutor {
         try {
             rpcProviderFactory.stop();
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -101,7 +99,7 @@ public abstract class AbstractTaskExecutor {
         try {
             PeachRpcInvokerFactory.getInstance().stop();
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -208,7 +206,7 @@ public abstract class AbstractTaskExecutor {
     private static Map<String, ITaskHandler> TASKS_HANDLER = new ConcurrentHashMap<>();
 
     public static ITaskHandler putTaskHandler(String name, ITaskHandler jobHandler) {
-        LOGGER.info("tasks handler register success, name:{}", name);
+        log.info("tasks handler register success, name:{}", name);
         return TASKS_HANDLER.put(name, jobHandler);
     }
 
