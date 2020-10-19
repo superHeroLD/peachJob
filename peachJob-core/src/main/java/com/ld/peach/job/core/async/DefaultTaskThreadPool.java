@@ -1,8 +1,7 @@
 package com.ld.peach.job.core.async;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -15,9 +14,8 @@ import java.util.function.*;
  * @Date 2020/4/28
  * @Version 1.0
  */
+@Slf4j
 public class DefaultTaskThreadPool {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultTaskThreadPool.class);
 
     /**
      * 线程池核心线程数
@@ -41,7 +39,7 @@ public class DefaultTaskThreadPool {
     }
 
     static class DefaultTaskThreadFactory implements ThreadFactory {
-        private static final AtomicInteger poolNumber = new AtomicInteger(1);
+        private static final AtomicInteger POOL_NUMBER = new AtomicInteger(1);
         private final ThreadGroup group;
         private final AtomicInteger threadNumber = new AtomicInteger(1);
         private final String namePrefix;
@@ -50,14 +48,12 @@ public class DefaultTaskThreadPool {
             SecurityManager s = System.getSecurityManager();
             group = (s != null) ? s.getThreadGroup() :
                     Thread.currentThread().getThreadGroup();
-            namePrefix = "peachJob-task-ThreadPool-" + poolNumber.getAndIncrement() + "-thread-";
+            namePrefix = "peachJob-task-ThreadPool-" + POOL_NUMBER.getAndIncrement() + "-thread-";
         }
 
         @Override
         public Thread newThread(Runnable r) {
-            Thread t = new Thread(group, r,
-                    namePrefix + threadNumber.getAndIncrement(),
-                    0);
+            Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
             if (t.isDaemon()) {
                 t.setDaemon(false);
             }

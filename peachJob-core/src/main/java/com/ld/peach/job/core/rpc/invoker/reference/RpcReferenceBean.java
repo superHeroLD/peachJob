@@ -226,8 +226,6 @@ public class RpcReferenceBean {
                     // do invoke
                     client.asyncSend(finalAddress, rpcRequest);
 
-                    //TODO 这里其实还是异步的，要等待一下
-                    Thread.sleep(5 * 1000);
                     // future get
                     PeachRpcResponse rpcResponse = futureResponse.get(timeout, TimeUnit.MILLISECONDS);
 
@@ -244,7 +242,7 @@ public class RpcReferenceBean {
                     LOGGER.info("peach-rpc, invoke error, address: [{}] callType: [{}] RPC Request: {}", finalAddress, callType, rpcRequest);
                     throw (e instanceof PeachRpcException) ? e : new PeachRpcException(e);
                 } finally {
-//                    futureResponse.removeInvokerFuture();
+                    futureResponse.removeInvokerFuture();
                 }
             } else if (CallType.FUTURE.equals(callType)) {
                 PeachRpcFutureResponse futureResponse = new PeachRpcFutureResponse(invokerFactory, rpcRequest, null);
@@ -261,7 +259,7 @@ public class RpcReferenceBean {
                     LOGGER.info("peach-rpc, invoke error, address: [{}] callType: [{}] RPC Request: {}", finalAddress, callType, rpcRequest);
 
                     // future-response remove
-//                    futureResponse.removeInvokerFuture();
+                    futureResponse.removeInvokerFuture();
                     throw (e instanceof PeachRpcException) ? e : new PeachRpcException(e);
                 }
             } else if (CallType.CALLBACK.equals(callType)) {
@@ -283,7 +281,7 @@ public class RpcReferenceBean {
                     LOGGER.info("peach-rpc, invoke error, address: [{}] callType: [{}] RPC Request: {}", finalAddress, callType, rpcRequest);
 
                     // future-response remove
-//                    futureResponse.removeInvokerFuture();
+                    futureResponse.removeInvokerFuture();
                     throw (e instanceof PeachRpcException) ? e : new PeachRpcException(e);
                 }
 

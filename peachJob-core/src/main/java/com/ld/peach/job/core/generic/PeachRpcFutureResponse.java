@@ -1,5 +1,6 @@
 package com.ld.peach.job.core.generic;
 
+import com.ld.peach.job.core.exception.PeachRpcException;
 import com.ld.peach.job.core.rpc.invoker.PeachRpcInvokerFactory;
 import com.ld.peach.job.core.rpc.invoker.call.PeachRpcInvokeCallback;
 
@@ -42,7 +43,7 @@ public class PeachRpcFutureResponse implements Future<PeachRpcResponse> {
     // ---------------------- response pool ----------------------
 
     public void setInvokerFuture() {
-         this.invokerFactory.setInvokerFuture(request.getRequestId(), this);
+        this.invokerFactory.setInvokerFuture(request.getRequestId(), this);
     }
 
     public void removeInvokerFuture() {
@@ -66,11 +67,29 @@ public class PeachRpcFutureResponse implements Future<PeachRpcResponse> {
 
     @Override
     public PeachRpcResponse get() throws InterruptedException, ExecutionException {
-        return response;
+        try {
+            return get(-1, TimeUnit.MILLISECONDS);
+        } catch (TimeoutException e) {
+            throw new PeachRpcException(e);
+        }
     }
 
     @Override
     public PeachRpcResponse get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+        if (!done) {
+            synchronized (lock) {
+                if (timeout < 0) {
+                    lock.wait();
+                } else {
+                    long timeoutMillis = (TimeUnit.MILLISECONDS == unit) ? timeout : TimeUnit.MILLISECONDS.convert(timeout, unit);
+                    lock.wait(timeoutMillis);
+                }
+            }
+        }
+
+        if (!done) {
+            throw new PeachRpcException("peach rpc, request timeout at:" + System.currentTimeMillis() + ", request:" + request.toString());
+        }
         return response;
     }
 
