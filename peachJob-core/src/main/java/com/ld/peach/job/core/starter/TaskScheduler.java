@@ -3,7 +3,6 @@ package com.ld.peach.job.core.starter;
 import com.ld.peach.job.core.handler.servlet.ServletServerHandler;
 import com.ld.peach.job.core.rpc.RpcProviderFactory;
 import com.ld.peach.job.core.rpc.serialize.impl.HessianSerializer;
-import com.ld.peach.job.core.service.ITaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
