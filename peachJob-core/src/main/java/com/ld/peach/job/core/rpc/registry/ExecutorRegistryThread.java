@@ -27,7 +27,7 @@ public class ExecutorRegistryThread {
     /**
      * 单例
      */
-    private static ExecutorRegistryThread INSTANCE = new ExecutorRegistryThread();
+    private static final ExecutorRegistryThread INSTANCE = new ExecutorRegistryThread();
 
     public static ExecutorRegistryThread getInstance() {
         return INSTANCE;

@@ -49,4 +49,9 @@ public interface TaskConstant {
      * API URI
      */
     String TASK_API = "/tasks-api";
+
+    /**
+     * 三分钟毫秒
+     */
+    int THREE_MINS_MILLIS = 3 * 60 * 1000;
 }

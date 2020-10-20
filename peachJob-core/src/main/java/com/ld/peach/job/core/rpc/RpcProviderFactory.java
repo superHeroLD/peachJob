@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.ld.peach.job.core.constant.TaskConstant.THREE_MINS_MILLIS;
+
 /**
  * @ClassName RpcProviderFactory
  * @Description RPC provider 实现工厂
@@ -136,7 +138,7 @@ public class RpcProviderFactory {
         // start server
         serviceAddress = IpUtil.getIpPort(this.ip, port);
 
-        //TODO 这里以后要指定RPC服务器类型
+        //TODO 这里以后要选择RPC服务器类型
         server = new PeachHttpServer();
 
         //注册启动回调
@@ -222,7 +224,7 @@ public class RpcProviderFactory {
         }
 
         //时间戳校验
-        if (System.currentTimeMillis() - jobsRpcRequest.getCreateMillisTime() > 3 * 60 * 1000) {
+        if (System.currentTimeMillis() - jobsRpcRequest.getCreateMillisTime() > THREE_MINS_MILLIS) {
             jobsRpcResponse.setErrorMsg("The timestamp difference between admin and executor exceeds the limit.");
             return jobsRpcResponse;
         }
@@ -244,7 +246,7 @@ public class RpcProviderFactory {
             Object result = method.invoke(serviceBean, parameters);
             jobsRpcResponse.setResult(result);
         } catch (Throwable t) {
-            log.error("peach rpc provider invokeService error.", t);
+            log.error("peach rpc provider invokeService error", t);
             jobsRpcResponse.setErrorMsg(ExceptionHelper.getErrorInfo(t));
         }
         return jobsRpcResponse;

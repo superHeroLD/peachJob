@@ -108,16 +108,16 @@ public abstract class AbstractTaskExecutor {
     /**
      * Jobs Admin
      */
-    private static List<ITaskService> TASK_SERVICE;
+    private static List<ITaskService> TASK_SERVICE_LIST;
 
     public static List<ITaskService> getTaskServiceList() {
-        return TASK_SERVICE;
+        return TASK_SERVICE_LIST;
     }
 
     private void initJobsAdminList(String adminAddress, String accessToken) throws Exception {
         if (StringUtil.isNotBlank(adminAddress)) {
-            if (Objects.isNull(TASK_SERVICE)) {
-                TASK_SERVICE = new ArrayList<>();
+            if (Objects.isNull(TASK_SERVICE_LIST)) {
+                TASK_SERVICE_LIST = new ArrayList<>();
             }
 
             String[] addressArr = adminAddress.trim().split(TaskConstant.COMMA);
@@ -129,7 +129,7 @@ public abstract class AbstractTaskExecutor {
             for (String address : addressArr) {
                 if (StringUtil.isNotBlank(address)) {
                     String addressUrl = address.concat(TaskConstant.TASK_API);
-                    ITaskService jobsAdmin = (ITaskService) new RpcReferenceBean(
+                    ITaskService taskAdmin = (ITaskService) new RpcReferenceBean(
                             getRpcSerializer(),
                             CallType.SYNC,
                             ITaskService.class,
@@ -141,7 +141,7 @@ public abstract class AbstractTaskExecutor {
                             null
                     ).getObject();
 
-                    TASK_SERVICE.add(jobsAdmin);
+                    TASK_SERVICE_LIST.add(taskAdmin);
                 }
             }
         }
