@@ -135,8 +135,11 @@ public class RpcProviderFactory {
     public void start() throws Exception {
         // start server
         serviceAddress = IpUtil.getIpPort(this.ip, port);
+
+        //TODO 这里以后要指定RPC服务器类型
         server = new PeachHttpServer();
-        // serviceRegistry started
+
+        //注册启动回调
         server.setStartedCallback(() -> {
             // start registry
             if (Objects.nonNull(serviceRegistryClass)) {
@@ -201,7 +204,7 @@ public class RpcProviderFactory {
     }
 
     /**
-     * invoke service
+     * 调用本地服务
      */
     public PeachRpcResponse invokeService(PeachRpcRequest jobsRpcRequest) {
         //  make response

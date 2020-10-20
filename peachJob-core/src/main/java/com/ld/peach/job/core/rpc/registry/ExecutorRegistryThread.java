@@ -36,8 +36,8 @@ public class ExecutorRegistryThread {
     /**
      * 启动服务注册线程
      *
-     * @param appName
-     * @param address
+     * @param appName 服务名称-写在配置文件里
+     * @param address 服务地址-IP：端口
      */
     public void start(final String appName, final String address) {
         if (StringUtil.isBlank(appName)) {

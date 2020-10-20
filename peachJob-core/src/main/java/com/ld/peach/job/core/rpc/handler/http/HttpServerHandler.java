@@ -51,7 +51,6 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
         try {
             // services mapping
             if ("/services".equals(uri)) {
-
                 // request
                 StringBuilder stringBuffer = new StringBuilder("<ui>");
                 for (String serviceKey : rpcProviderFactory.getServiceData().keySet()) {
@@ -66,7 +65,6 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
                 writeResponse(ctx, keepAlive, responseBytes);
 
             } else {
-
                 // valid
                 if (requestBytes.length == 0) {
                     throw new PeachRpcException("peach rpc request data empty.");

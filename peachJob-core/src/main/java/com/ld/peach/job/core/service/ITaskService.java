@@ -5,6 +5,7 @@ import com.ld.peach.job.core.model.TaskInfo;
 import com.ld.peach.job.core.model.params.RegistryParam;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -61,7 +62,7 @@ public interface ITaskService {
      */
     default boolean tryLock(String lockKey) {
         String owner = ownerThreadLocal.get();
-        if (null != owner && !owner.equals(TaskConstant.OPERATION_TRY_LOCK)) {
+        if (Objects.nonNull(owner) && !owner.equals(TaskConstant.OPERATION_TRY_LOCK)) {
             // already hold a lock
             return true;
         }

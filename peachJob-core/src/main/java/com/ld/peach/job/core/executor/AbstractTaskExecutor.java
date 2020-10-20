@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class AbstractTaskExecutor {
 
     /**
-     * jobs admin address, such as "http://address" or "http://address01,http://address02"
+     * admin address, such as "http://address" or "http://address01,http://address02"
      */
     private String adminAddress;
 
@@ -57,6 +57,8 @@ public abstract class AbstractTaskExecutor {
 
     /**
      * 序列化接口
+     *
+     * @return 序列化接口实现
      */
     public abstract IPeachJobRpcSerializer getRpcSerializer();
 
@@ -66,7 +68,7 @@ public abstract class AbstractTaskExecutor {
      * @throws Exception Exception
      */
     public void start() throws Exception {
-        // init invoker, admin-client
+        //初始化Http服务器，同时把自己注册到管理端
         initJobsAdminList(adminAddress, accessToken);
 
         // init executor-server
@@ -119,6 +121,11 @@ public abstract class AbstractTaskExecutor {
             }
 
             String[] addressArr = adminAddress.trim().split(TaskConstant.COMMA);
+
+            if (addressArr.length <= 0) {
+                return;
+            }
+
             for (String address : addressArr) {
                 if (StringUtil.isNotBlank(address)) {
                     String addressUrl = address.concat(TaskConstant.TASK_API);
@@ -127,7 +134,7 @@ public abstract class AbstractTaskExecutor {
                             CallType.SYNC,
                             ITaskService.class,
                             null,
-                            10000,
+                            1000,
                             addressUrl,
                             accessToken,
                             null,

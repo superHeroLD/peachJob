@@ -69,14 +69,14 @@ public class PeachHttpServer extends Server {
                 // bind
                 ChannelFuture future = bootstrap.bind(rpcProviderFactory.getPort()).sync();
 
-                log.info("peach rpc remoting server start success, nettype = {}, port = {}", PeachHttpServer.class.getName(), rpcProviderFactory.getPort());
+                log.info("peach-rpc remoting server start success, nettype = {}, port = {}", PeachHttpServer.class.getName(), rpcProviderFactory.getPort());
                 onStarted();
 
                 // wait util stop
                 future.channel().closeFuture().sync();
 
             } catch (InterruptedException e) {
-                log.info("peach rpc remoting server stop.");
+                log.info("peach-rpc remoting server stop.");
             } finally {
                 // stop
                 try {
@@ -110,6 +110,6 @@ public class PeachHttpServer extends Server {
 
         // on stop
         onStopped();
-        log.info("peach rpc remoting http server destroy success.");
+        log.info("peach-rpc remoting http server destroy success.");
     }
 }
