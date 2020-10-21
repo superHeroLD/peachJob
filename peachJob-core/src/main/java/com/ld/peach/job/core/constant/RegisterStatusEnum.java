@@ -10,13 +10,14 @@ package com.ld.peach.job.core.constant;
 public enum RegisterStatusEnum {
 
     /**
-     * 启用
-     */
-    ENABLED(0),
-    /**
      * 已禁用
      */
-    DISABLED(1);
+    DISABLED(0),
+    /**
+     * 启用
+     */
+    ENABLED(1);
+
 
     private final Integer value;
 
