@@ -1,7 +1,6 @@
 package com.ld.peach.job.admin;
 
-import com.ld.peach.job.core.starter.TaskScheduler;
-import org.springframework.context.annotation.Bean;
+import com.ld.peach.job.core.starter.EnablePeachJobAdmin;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -12,10 +11,6 @@ import org.springframework.context.annotation.Configuration;
  * @Version 1.0
  */
 @Configuration
+@EnablePeachJobAdmin
 public class AdminConfig {
-
-    @Bean
-    public TaskScheduler taskScheduler() {
-        return new TaskScheduler();
-    }
 }

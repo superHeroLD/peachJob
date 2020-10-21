@@ -15,7 +15,7 @@ import java.util.UUID;
  * @Date 2020/9/28
  * @Version 1.0
  */
-public interface ITaskService {
+public interface IAppService {
 
     /**
      * 节点注册

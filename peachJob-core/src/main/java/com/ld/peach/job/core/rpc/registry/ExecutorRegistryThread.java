@@ -4,7 +4,7 @@ import com.ld.peach.job.core.constant.RegisterStatusEnum;
 import com.ld.peach.job.core.constant.TaskConstant;
 import com.ld.peach.job.core.executor.AbstractTaskExecutor;
 import com.ld.peach.job.core.model.params.RegistryParam;
-import com.ld.peach.job.core.service.ITaskService;
+import com.ld.peach.job.core.service.IAppService;
 import com.ld.peach.job.core.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,7 +55,7 @@ public class ExecutorRegistryThread {
             while (!toStop) {
                 try {
                     RegistryParam registryParam = new RegistryParam(appName, address);
-                    for (ITaskService taskService : AbstractTaskExecutor.getTaskServiceList()) {
+                    for (IAppService taskService : AbstractTaskExecutor.getTaskServiceList()) {
                         try {
                             if (taskService.registry(registryParam)) {
                                 log.info("[ExecutorRegistryThread] Task registry success, registryParam: {}", registryParam);
@@ -88,7 +88,7 @@ public class ExecutorRegistryThread {
             // registry remove
             try {
                 RegistryParam registryParam = new RegistryParam(appName, address);
-                for (ITaskService taskService : AbstractTaskExecutor.getTaskServiceList()) {
+                for (IAppService taskService : AbstractTaskExecutor.getTaskServiceList()) {
                     try {
                         registryParam.setRegisterStatusEnum(RegisterStatusEnum.DISABLED);
                         if (taskService.removeApp(registryParam)) {

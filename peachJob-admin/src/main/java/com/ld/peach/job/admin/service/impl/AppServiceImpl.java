@@ -1,11 +1,11 @@
-package com.ld.peach.job.admin.service;
+package com.ld.peach.job.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.ld.peach.job.admin.mapper.ServiceRegistryMapper;
 import com.ld.peach.job.core.model.ServiceRegistry;
 import com.ld.peach.job.core.model.TaskInfo;
 import com.ld.peach.job.core.model.params.RegistryParam;
-import com.ld.peach.job.core.service.ITaskService;
+import com.ld.peach.job.core.service.IAppService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class TaskServiceImpl implements ITaskService {
+public class AppServiceImpl implements IAppService {
 
     @Resource
     private ServiceRegistryMapper serviceRegistryMapper;

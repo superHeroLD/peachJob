@@ -3,13 +3,14 @@ package com.ld.peach.job.core.starter;
 import com.ld.peach.job.core.handler.servlet.ServletServerHandler;
 import com.ld.peach.job.core.rpc.RpcProviderFactory;
 import com.ld.peach.job.core.rpc.serialize.impl.HessianSerializer;
-import com.ld.peach.job.core.service.ITaskService;
+import com.ld.peach.job.core.service.IAppService;
+import com.ld.peach.job.core.service.PeachJobHeartBeat;
+import com.ld.peach.job.core.service.PeachJobHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +19,7 @@ import java.util.Objects;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -30,10 +32,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 @Configuration
 public class TaskScheduler implements InitializingBean, DisposableBean {
-
-    //TODO 这里要思考一下注入方式，这样做是不是不太合适
-    @Resource
-    private ITaskService taskService;
 
     private ScheduledExecutorService executor;
 
@@ -55,6 +53,8 @@ public class TaskScheduler implements InitializingBean, DisposableBean {
                 return thread;
             }
         });
+
+        executor.scheduleAtFixedRate(new PeachJobHeartBeat(), 1, 1, TimeUnit.SECONDS);
 
         log.info("[TaskScheduler] init admin service success.");
     }
@@ -91,7 +91,7 @@ public class TaskScheduler implements InitializingBean, DisposableBean {
                 null);
 
         //服务注册
-        rpcProviderFactory.addService(ITaskService.class.getName(), null, taskService);
+        rpcProviderFactory.addService(IAppService.class.getName(), null, PeachJobHelper.getAppService());
 
         // servlet handler
         servletServerHandler = new ServletServerHandler(this.rpcProviderFactory);

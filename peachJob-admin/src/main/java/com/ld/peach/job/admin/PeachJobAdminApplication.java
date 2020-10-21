@@ -3,6 +3,7 @@ package com.ld.peach.job.admin;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * @ClassName PeachJobAdminApplication
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @Version 1.0
  */
 @SpringBootApplication
+@EnableTransactionManagement
 @MapperScan("com.ld.peach.job.admin.mapper")
 public class PeachJobAdminApplication {
     public static void main(String[] args) {

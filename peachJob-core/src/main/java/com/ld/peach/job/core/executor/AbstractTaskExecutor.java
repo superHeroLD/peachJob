@@ -9,7 +9,7 @@ import com.ld.peach.job.core.rpc.invoker.reference.RpcReferenceBean;
 import com.ld.peach.job.core.rpc.registry.ExecutorRegistryThread;
 import com.ld.peach.job.core.rpc.registry.IServiceRegistry;
 import com.ld.peach.job.core.rpc.serialize.IPeachJobRpcSerializer;
-import com.ld.peach.job.core.service.ITaskService;
+import com.ld.peach.job.core.service.IAppService;
 import com.ld.peach.job.core.util.IpUtil;
 import com.ld.peach.job.core.util.NetUtil;
 import com.ld.peach.job.core.util.StringUtil;
@@ -108,9 +108,9 @@ public abstract class AbstractTaskExecutor {
     /**
      * Jobs Admin
      */
-    private static List<ITaskService> TASK_SERVICE_LIST;
+    private static List<IAppService> TASK_SERVICE_LIST;
 
-    public static List<ITaskService> getTaskServiceList() {
+    public static List<IAppService> getTaskServiceList() {
         return TASK_SERVICE_LIST;
     }
 
@@ -129,10 +129,10 @@ public abstract class AbstractTaskExecutor {
             for (String address : addressArr) {
                 if (StringUtil.isNotBlank(address)) {
                     String addressUrl = address.concat(TaskConstant.TASK_API);
-                    ITaskService taskAdmin = (ITaskService) new RpcReferenceBean(
+                    IAppService taskAdmin = (IAppService) new RpcReferenceBean(
                             getRpcSerializer(),
                             CallType.SYNC,
-                            ITaskService.class,
+                            IAppService.class,
                             null,
                             1000,
                             addressUrl,
