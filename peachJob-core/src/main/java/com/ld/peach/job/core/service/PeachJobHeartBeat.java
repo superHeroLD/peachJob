@@ -1,7 +1,12 @@
 package com.ld.peach.job.core.service;
 
-import com.ld.peach.job.core.constant.TaskConstant;
+import com.ld.peach.job.core.model.TaskInfo;
+import com.ld.peach.job.core.starter.JobsProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @ClassName PeachJobHeartBeat
@@ -13,6 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PeachJobHeartBeat implements Runnable {
 
+    @Resource
+    private JobsProperties jobsProperties;
+
     @Override
     public void run() {
         log.info("PeachJobHeartBeat begin");
@@ -20,13 +28,20 @@ public class PeachJobHeartBeat implements Runnable {
         IAppService appService = PeachJobHelper.getAppService();
 
         try {
-            if (appService.tryLock(TaskConstant.OPERATION_TRY_LOCK)) {
+            //获取未执行的任务信息
+            List<TaskInfo> unExecutedTaskList = appService.getUnExecutedTaskList(5);
+
+            if (CollectionUtils.isEmpty(unExecutedTaskList)) {
 
             }
-        } catch (Exception ex) {
 
+
+        } catch (Exception ex) {
+            log.error("PeachJobHeartBeat occur error: ", ex);
         } finally {
 
         }
+
+        log.info("PeachJobHeartBeat end");
     }
 }

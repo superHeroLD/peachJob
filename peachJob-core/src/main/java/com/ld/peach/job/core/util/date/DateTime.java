@@ -2,6 +2,7 @@ package com.ld.peach.job.core.util.date;
 
 import com.ld.peach.job.core.util.ObjectUtil;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -100,5 +101,19 @@ public class DateTime extends Date {
     public String format(String format) {
         final SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(this);
+    }
+
+    @Override
+    public String toString() {
+        if (null != timeZone) {
+            final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatePattern.NORM_DATETIME_PATTERN);
+            simpleDateFormat.setTimeZone(timeZone);
+            return toString(simpleDateFormat);
+        }
+        return format(DatePattern.NORM_DATETIME_PATTERN);
+    }
+
+    public String toString(DateFormat format) {
+        return format.format(this);
     }
 }

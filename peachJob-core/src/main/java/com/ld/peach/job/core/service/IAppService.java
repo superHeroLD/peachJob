@@ -27,11 +27,12 @@ public interface IAppService {
 
     /**
      * 待调度任务列表
+     * 时间间隔单位是分钟
      *
-     * @param nextTime 下次执行时间
-     * @return
+     * @param timeInterVal 时间间隔
+     * @return 未执行任务列表
      */
-    List<TaskInfo> getTaskInfoList(long nextTime);
+    List<TaskInfo> getUnExecutedTaskList(int timeInterVal);
 
     /**
      * 根据 任务ID 获取任务信息对象

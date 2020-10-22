@@ -2,6 +2,7 @@ package com.ld.peach.job.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.ld.peach.job.admin.mapper.ServiceRegistryMapper;
+import com.ld.peach.job.admin.service.TaskService;
 import com.ld.peach.job.core.model.ServiceRegistry;
 import com.ld.peach.job.core.model.TaskInfo;
 import com.ld.peach.job.core.model.params.RegistryParam;
@@ -26,6 +27,8 @@ public class AppServiceImpl implements IAppService {
 
     @Resource
     private ServiceRegistryMapper serviceRegistryMapper;
+    @Resource
+    private TaskService taskService;
 
     /**
      * 服务注册
@@ -61,9 +64,10 @@ public class AppServiceImpl implements IAppService {
     }
 
     @Override
-    public List<TaskInfo> getTaskInfoList(long nextTime) {
-        return null;
+    public List<TaskInfo> getUnExecutedTaskList(int timeInterVal) {
+        return taskService.getUnExecutedTaskList(timeInterVal);
     }
+
 
     @Override
     public TaskInfo getTaskInfoById(Long id) {
