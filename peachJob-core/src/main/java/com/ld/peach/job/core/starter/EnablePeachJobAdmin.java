@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Configuration
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Import({PeachJobHelper.class, TaskScheduler.class})
+@Import({PeachJobHelper.class, TaskScheduler.class, PeachJobAutoAdminConfiguration.class})
 @ConditionalOnProperty(prefix = JobsProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 public @interface EnablePeachJobAdmin {
 }
