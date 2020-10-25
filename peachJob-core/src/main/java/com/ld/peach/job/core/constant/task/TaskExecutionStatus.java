@@ -20,11 +20,11 @@ public enum TaskExecutionStatus {
     /**
      * 任务执行状态
      */
-    NOT_EXECUTION(0, "未执行"),
-    SUCCESS(1, "执行成功"),
-    FAIL(-1, "执行失败");
+    NOT_EXECUTION(Short.parseShort("0"), "未执行"),
+    SUCCESS(Short.parseShort("1"), "执行成功"),
+    FAIL(Short.parseShort("-1"), "执行失败");
 
-    private final int code;
+    private final short code;
 
     private final String desc;
 

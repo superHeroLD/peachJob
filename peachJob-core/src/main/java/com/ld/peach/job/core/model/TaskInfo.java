@@ -31,7 +31,7 @@ public class TaskInfo {
     /**
      * 任务是否有效
      */
-    private Long valid;
+    private Boolean valid;
 
     /**
      * 任务预期执行时间

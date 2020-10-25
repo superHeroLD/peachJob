@@ -1,11 +1,9 @@
 package com.ld.peach.job.core.service;
 
 import com.ld.peach.job.core.model.TaskInfo;
-import com.ld.peach.job.core.starter.JobsProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -18,9 +16,6 @@ import java.util.List;
 @Slf4j
 public class PeachJobHeartBeat implements Runnable {
 
-    @Resource
-    private JobsProperties jobsProperties;
-
     @Override
     public void run() {
         log.info("PeachJobHeartBeat begin");
@@ -29,12 +24,15 @@ public class PeachJobHeartBeat implements Runnable {
 
         try {
             //获取未执行的任务信息
-            List<TaskInfo> unExecutedTaskList = appService.getUnExecutedTaskList(5);
+            List<TaskInfo> unExecutedTaskList = appService.getUnExecutedTaskList(PeachJobHelper.getJobsProperties().getTaskQueryInterval());
 
             if (CollectionUtils.isEmpty(unExecutedTaskList)) {
-
+                log.info("[PeachJobHeartBeat] There is no task can be performed");
+                return;
             }
 
+            //进行任务分发
+            PeachJobHelper.getTaskDisruptorTemplate().bulkPublish(unExecutedTaskList);
 
         } catch (Exception ex) {
             log.error("PeachJobHeartBeat occur error: ", ex);

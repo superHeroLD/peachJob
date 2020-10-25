@@ -1,9 +1,11 @@
 package com.ld.peach.job.core.model.builder;
 
 import com.ld.peach.job.core.constant.TaskConstant;
+import com.ld.peach.job.core.constant.task.TaskExecutionStatus;
+import com.ld.peach.job.core.constant.task.TaskExecutionStrategy;
 import com.ld.peach.job.core.model.TaskInfo;
-import com.ld.peach.job.core.util.date.DateUtil;
 import com.ld.peach.job.core.util.StringUtil;
+import com.ld.peach.job.core.util.date.DateUtil;
 
 import java.util.Date;
 import java.util.Objects;
@@ -58,6 +60,11 @@ public final class PeachTaskBuilder {
         return new PeachTaskBuilder();
     }
 
+    /**
+     * 构建任务执行器
+     *
+     * @param taskHandlerName 任务执行器名称
+     */
     public PeachTaskBuilder taskHandler(String taskHandlerName) {
         checkState(StringUtil.isNotBlank(taskHandlerName), "taskHandlerName must not blank");
 
@@ -156,6 +163,11 @@ public final class PeachTaskBuilder {
         taskInfo.setExecuteParams(executeParams);
         taskInfo.setMaxRetryNum(maxRetryNum);
         taskInfo.setExecutionStrategy(executionStrategy);
+
+        //设置初始值
+        taskInfo.setStatus(TaskExecutionStatus.NOT_EXECUTION.getCode());
+        taskInfo.setValid(Boolean.TRUE);
+        taskInfo.setExecutionStrategy(TaskExecutionStrategy.DEFAULT.getCode());
 
         return taskInfo;
     }

@@ -51,4 +51,14 @@ public class TaskService {
 
         return canExecutedTaskList;
     }
+
+    /**
+     * 插入任务信息到 DB
+     *
+     * @param taskInfo 任务信息
+     * @return 插入数量
+     */
+    public Integer insertTask(TaskInfo taskInfo) {
+        return taskInfoMapper.insert(taskInfo);
+    }
 }
