@@ -34,6 +34,8 @@ public class PeachJobHeartBeat implements Runnable {
             //进行任务分发
             PeachJobHelper.getTaskDisruptorTemplate().bulkPublish(unExecutedTaskList);
 
+            //TODO 这里应该分发超过执行时间的任务，失败过的任务，还是创建一个新的心跳任务？
+
         } catch (Exception ex) {
             log.error("PeachJobHeartBeat occur error: ", ex);
         } finally {
