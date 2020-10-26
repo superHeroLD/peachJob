@@ -41,8 +41,11 @@ public interface TaskConstant {
     /**
      * 锁唯一标示
      */
-    String DEFAULT_LOCK_KEY = "JOBS_LOCK";
+    String DEFAULT_LOCK_KEY = "PEACH_JOB_LOCK";
 
+    /**
+     * 逗号分隔符
+     */
     String COMMA = ",";
 
     /**

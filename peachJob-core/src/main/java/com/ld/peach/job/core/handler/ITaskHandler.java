@@ -20,5 +20,5 @@ public interface ITaskHandler {
      * @return 执行结果
      * @throws PeachTaskException 任务异常
      */
-    TaskResponse execute(String tenantId, String params) throws PeachTaskException;
+    TaskResponse execute(String params) throws PeachTaskException;
 }

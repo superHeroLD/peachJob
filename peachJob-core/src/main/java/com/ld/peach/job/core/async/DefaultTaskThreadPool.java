@@ -31,7 +31,7 @@ public class DefaultTaskThreadPool {
     }
 
     private static class ThreadPoolHolder {
-        private static final ThreadPoolExecutor INSTANCE = new ThreadPoolExecutor(CORE_NUM * 2, CORE_NUM * 4,
+        private static final ThreadPoolExecutor INSTANCE = new ThreadPoolExecutor(CORE_NUM, CORE_NUM,
                 60, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>(DEFAULT_TASK_QUEUE_SIZE),
                 new DefaultTaskThreadFactory(),

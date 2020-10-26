@@ -1,11 +1,13 @@
 package com.ld.peach.job.core.generic;
 
 import com.ld.peach.job.core.constant.ResponseCode;
+import com.ld.peach.job.core.constant.TaskConstant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @ClassName TaskResponse
@@ -52,5 +54,13 @@ public class TaskResponse<T> implements Serializable {
 
     public static <T> TaskResponse<T> fail() {
         return new TaskResponse<>(ResponseCode.FAIL, null);
+    }
+
+    public static <T> TaskResponse<T> fail(String msg) {
+        return new TaskResponse<>(ResponseCode.FAIL.getCode(), msg, null);
+    }
+
+    public boolean isSuccess() {
+        return Objects.equals(TaskConstant.CODE_SUCCESS, this.getCode());
     }
 }

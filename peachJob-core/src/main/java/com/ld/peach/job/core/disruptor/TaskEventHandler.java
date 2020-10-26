@@ -2,6 +2,7 @@ package com.ld.peach.job.core.disruptor;
 
 import cn.hutool.core.date.DateUtil;
 import com.ld.peach.job.core.constant.task.TaskExecutionStatus;
+import com.ld.peach.job.core.dispatch.TaskDispatchCenter;
 import com.ld.peach.job.core.model.TaskInfo;
 import com.ld.peach.job.core.service.PeachJobHelper;
 import com.lmax.disruptor.EventHandler;
@@ -47,7 +48,7 @@ public class TaskEventHandler implements EventHandler<TaskEvent> {
             return;
         }
 
-        //TODO 触发任务执行
         log.info("Task execution: {}", taskInfo);
+        TaskDispatchCenter.processTask(taskInfo);
     }
 }

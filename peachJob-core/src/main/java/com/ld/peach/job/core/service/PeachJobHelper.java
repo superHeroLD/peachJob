@@ -1,6 +1,7 @@
 package com.ld.peach.job.core.service;
 
 import com.ld.peach.job.core.disruptor.TaskDisruptorTemplate;
+import com.ld.peach.job.core.rpc.serialize.IPeachJobRpcSerializer;
 import com.ld.peach.job.core.starter.JobsProperties;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,8 @@ public class PeachJobHelper implements InitializingBean {
     private JobsProperties jobsProperties;
     @Resource
     private TaskDisruptorTemplate taskDisruptorTemplate;
+    @Resource
+    private IPeachJobRpcSerializer rpcSerializer;
 
     private static PeachJobHelper PEACH_JOB_HELPER = null;
 
@@ -57,6 +60,15 @@ public class PeachJobHelper implements InitializingBean {
      */
     public static TaskDisruptorTemplate getTaskDisruptorTemplate() {
         return PEACH_JOB_HELPER.taskDisruptorTemplate;
+    }
+
+    /**
+     * 获取RPC 序列化
+     *
+     * @return rpcSerializer
+     */
+    public static IPeachJobRpcSerializer getRpcSerializer() {
+        return PEACH_JOB_HELPER.rpcSerializer;
     }
 
 }

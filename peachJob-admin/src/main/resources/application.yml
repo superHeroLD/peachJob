@@ -45,7 +45,7 @@ spring:
 
 # mybatis
 mybatis-plus:
-#  mapper-locations: classpath:/mapper/*Mapper.xml
+  #  mapper-locations: classpath:/mapper/*Mapper.xml
   global-config:
     banner: false
     db-config:
@@ -53,3 +53,8 @@ mybatis-plus:
   configuration:
     cache-enabled: false
     map-underscore-to-camel-case: true
+  #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# peach-job
+peach-job:
+  appAccessToken: peach job

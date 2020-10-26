@@ -2,7 +2,7 @@ package com.ld.peach.job.core.executor;
 
 import com.ld.peach.job.core.exception.PeachTaskException;
 import com.ld.peach.job.core.generic.TaskResponse;
-import com.ld.peach.job.core.generic.param.TriggerParam;
+import com.ld.peach.job.core.generic.param.DispatchParam;
 import com.ld.peach.job.core.handler.ITaskHandler;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,19 +21,19 @@ public class TaskExecutor implements ITaskExecutor {
     /**
      * 执行任务调度
      *
-     * @param triggerParam 触发参数
+     * @param dispatchParam 触发参数
      * @return 任务处理结果
      */
     @Override
-    public TaskResponse run(TriggerParam triggerParam) throws PeachTaskException {
-        if (Objects.isNull(triggerParam)) {
+    public TaskResponse run(DispatchParam dispatchParam) throws PeachTaskException {
+        if (Objects.isNull(dispatchParam)) {
             throw new PeachTaskException("TaskExecutor execute triggerParam is null");
         }
-        ITaskHandler taskHandler = AbstractTaskExecutor.getTaskHandler(triggerParam.getHandler());
+        ITaskHandler taskHandler = AbstractTaskExecutor.getTaskHandler(dispatchParam.getHandler());
         if (Objects.isNull(taskHandler)) {
-            throw new PeachTaskException("TaskExecutor not found execute handler:" + triggerParam.getHandler());
+            throw new PeachTaskException("TaskExecutor not found execute handler:" + dispatchParam.getHandler());
         }
 
-        return taskHandler.execute(triggerParam.getTenantId(), triggerParam.getParam());
+        return taskHandler.execute(dispatchParam.getParam());
     }
 }

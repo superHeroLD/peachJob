@@ -7,6 +7,7 @@ import com.ld.peach.job.core.model.params.RegistryParam;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @InterfaceName IJobService
@@ -21,7 +22,7 @@ public interface IAppService {
      * 节点注册
      *
      * @param registryParam 注册参数
-     * @return
+     * @return 是否注册成功
      */
     boolean registry(RegistryParam registryParam);
 
@@ -61,7 +62,7 @@ public interface IAppService {
     /**
      * 使用线程本地变量记录锁的持有者
      */
-    ThreadLocal<String> ownerThreadLocal = new ThreadLocal<>();
+    ThreadLocal<String> OWNER_THREADLOCAL = new ThreadLocal<>();
 
     /**
      * 尝试获取锁
@@ -70,15 +71,18 @@ public interface IAppService {
      * @return 返回true代表已经获得锁，false代表获取锁失败（锁已经被别的进程占有）
      */
     default boolean tryLock(String lockKey) {
-        String owner = ownerThreadLocal.get();
+        String owner = OWNER_THREADLOCAL.get();
         if (Objects.nonNull(owner) && !owner.equals(TaskConstant.OPERATION_TRY_LOCK)) {
             // already hold a lock
             return true;
         }
-        ownerThreadLocal.set(TaskConstant.OPERATION_TRY_LOCK);
-        owner = UUID.randomUUID().toString();
+        OWNER_THREADLOCAL.set(TaskConstant.OPERATION_TRY_LOCK);
+
+        owner = UUID.randomUUID().toString().replace("-", "")
+                .concat(String.valueOf(ThreadLocalRandom.current().nextInt(123456)));
+
         if (tryLock(lockKey, owner)) {
-            ownerThreadLocal.set(owner);
+            OWNER_THREADLOCAL.set(owner);
             return true;
         }
         return false;
@@ -95,11 +99,12 @@ public interface IAppService {
         if (force) {
             unlock(lockKey, null);
         } else {
-            String owner = ownerThreadLocal.get();
+            String owner = OWNER_THREADLOCAL.get();
             if (null == owner) {
                 throw new IllegalMonitorStateException("should not call unlock() without tryLock(()");
             }
-            ownerThreadLocal.remove();
+
+            OWNER_THREADLOCAL.remove();
             if (!TaskConstant.OPERATION_TRY_LOCK.equals(owner)) {
                 unlock(lockKey, owner);
             }
@@ -128,7 +133,7 @@ public interface IAppService {
     /**
      * 清理超时节点
      *
-     * @return 影响行数
+     * @return 清理数量
      */
     default int cleanTimeoutApp() {
         return removeTimeOutApp(TaskConstant.CLEAN_TIMEOUT);
@@ -153,9 +158,9 @@ public interface IAppService {
 
     /**
      * 查询注册地址列表
+     * 只获取还维持心跳的
      *
-     * @param app 客户端 APP 名称
-     * @return
+     * @return 注册的服务端的IP和端口
      */
-    List<String> getAppAddressList(String app);
+    List<String> getAppAddressList();
 }

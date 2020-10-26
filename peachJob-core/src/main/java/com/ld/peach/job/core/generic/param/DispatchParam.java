@@ -1,6 +1,7 @@
 package com.ld.peach.job.core.generic.param;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
@@ -12,13 +13,10 @@ import java.io.Serializable;
  * @Version 1.0
  */
 @Data
-public class TriggerParam implements Serializable {
+@Accessors(chain = true)
+public class DispatchParam implements Serializable {
 
     private Long taskId;
-    /**
-     * 租户ID
-     */
-    private String tenantId;
 
     private String handler;
 

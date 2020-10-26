@@ -35,7 +35,7 @@ public class TaskHandler implements ITaskHandler {
      * @param params 入参
      */
     @Override
-    public TaskResponse execute(String tenantId, String params) throws PeachTaskException {
+    public TaskResponse execute(String params) throws PeachTaskException {
         try {
             method.invoke(target, params);
             return TaskResponse.success();

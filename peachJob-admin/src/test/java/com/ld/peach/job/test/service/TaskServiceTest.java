@@ -1,4 +1,4 @@
-package com.ld.peach.job.test.task;
+package com.ld.peach.job.test.service;
 
 import com.ld.peach.job.admin.service.TaskService;
 import com.ld.peach.job.core.model.TaskInfo;
@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -38,5 +39,12 @@ public class TaskServiceTest extends BaseTest {
 
         Integer insertNum = taskService.insertTask(taskInfo);
         Assert.assertEquals("insertNum not equals 1", 1, (int) insertNum);
+    }
+
+    @Test
+    public void getUnExecutedTaskListTest() {
+
+        List<TaskInfo> unExecutedTaskList = taskService.getUnExecutedTaskList(10);
+        log.info("unExecutedTaskList size: {}", unExecutedTaskList.size());
     }
 }

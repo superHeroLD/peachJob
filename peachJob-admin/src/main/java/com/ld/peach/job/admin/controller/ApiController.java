@@ -3,7 +3,6 @@ package com.ld.peach.job.admin.controller;
 import com.ld.peach.job.core.constant.TaskConstant;
 import com.ld.peach.job.core.starter.TaskScheduler;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -19,12 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Slf4j
 @Controller
-public class ApiController implements InitializingBean {
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-
-    }
+public class ApiController {
 
     @RequestMapping(TaskConstant.TASK_API)
     public void api(HttpServletRequest request, HttpServletResponse response) throws Exception {

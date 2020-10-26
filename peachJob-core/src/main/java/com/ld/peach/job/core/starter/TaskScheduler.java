@@ -1,11 +1,15 @@
 package com.ld.peach.job.core.starter;
 
+import com.ld.peach.job.core.executor.ITaskExecutor;
 import com.ld.peach.job.core.handler.servlet.ServletServerHandler;
 import com.ld.peach.job.core.rpc.RpcProviderFactory;
+import com.ld.peach.job.core.rpc.invoker.call.CallType;
+import com.ld.peach.job.core.rpc.invoker.reference.RpcReferenceBean;
 import com.ld.peach.job.core.rpc.serialize.impl.HessianSerializer;
 import com.ld.peach.job.core.service.IAppService;
 import com.ld.peach.job.core.service.PeachJobHeartBeat;
 import com.ld.peach.job.core.service.PeachJobHelper;
+import com.ld.peach.job.core.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -15,11 +19,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -99,5 +101,36 @@ public class TaskScheduler implements InitializingBean, DisposableBean {
 
     public static void invokeAdminService(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         servletServerHandler.handle(null, request, response);
+    }
+
+    private static Map<String, ITaskExecutor> TASK_EXECUTOR = new ConcurrentHashMap<>();
+
+    public static ITaskExecutor getTaskExecutor(String address) {
+        if (StringUtil.isBlank(address)) {
+            return null;
+        }
+
+        // load-cache
+        address = address.trim();
+        ITaskExecutor taskExecutor = TASK_EXECUTOR.get(address);
+        if (Objects.nonNull(taskExecutor)) {
+            return taskExecutor;
+        }
+
+        // set-cache
+        taskExecutor = (ITaskExecutor) new RpcReferenceBean(
+                PeachJobHelper.getRpcSerializer(),
+                CallType.SYNC,
+                ITaskExecutor.class,
+                null,
+                5000,
+                address,
+                PeachJobHelper.getJobsProperties().getAppAccessToken(),
+                null,
+                null).getObject();
+
+        TASK_EXECUTOR.put(address, taskExecutor);
+        log.info("[TaskScheduler] put address: {} taskExecutor: {} to local cache", address, taskExecutor.getClass().getName());
+        return taskExecutor;
     }
 }

@@ -45,6 +45,6 @@ public class JobsProperties {
     /**
      * 任务查询时间间隔
      */
-    private int taskQueryInterval = 5;
+    private int taskQueryInterval = 10;
 
 }

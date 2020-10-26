@@ -36,13 +36,13 @@ public class ServletServerHandler {
     public void handle(String target, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         if ("/services".equals(target)) {
 
-            StringBuffer stringBuffer = new StringBuffer("<ui>");
+            StringBuilder stringBuilder = new StringBuilder("<ui>");
             for (String serviceKey : rpcProviderFactory.getServiceData().keySet()) {
-                stringBuffer.append("<li>").append(serviceKey).append(": ").append(rpcProviderFactory.getServiceData().get(serviceKey)).append("</li>");
+                stringBuilder.append("<li>").append(serviceKey).append(": ").append(rpcProviderFactory.getServiceData().get(serviceKey)).append("</li>");
             }
-            stringBuffer.append("</ui>");
+            stringBuilder.append("</ui>");
 
-            writeResponse(response, stringBuffer.toString().getBytes());
+            writeResponse(response, stringBuilder.toString().getBytes());
         } else {
             PeachRpcRequest rpcRequest;
 

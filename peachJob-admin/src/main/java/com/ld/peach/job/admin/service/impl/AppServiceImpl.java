@@ -1,11 +1,8 @@
 package com.ld.peach.job.admin.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.ld.peach.job.admin.mapper.ServiceRegistryMapper;
-import com.ld.peach.job.admin.mapper.TaskInfoMapper;
+import com.ld.peach.job.admin.service.LockService;
+import com.ld.peach.job.admin.service.RegistryService;
 import com.ld.peach.job.admin.service.TaskService;
-import com.ld.peach.job.core.model.ServiceRegistry;
 import com.ld.peach.job.core.model.TaskInfo;
 import com.ld.peach.job.core.model.params.RegistryParam;
 import com.ld.peach.job.core.service.IAppService;
@@ -13,11 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 /**
  * @ClassName TaskService
@@ -33,9 +26,9 @@ public class AppServiceImpl implements IAppService {
     @Resource
     private TaskService taskService;
     @Resource
-    private TaskInfoMapper taskInfoMapper;
+    private RegistryService registryService;
     @Resource
-    private ServiceRegistryMapper serviceRegistryMapper;
+    private LockService lockService;
 
     /**
      * 服务注册
@@ -45,29 +38,7 @@ public class AppServiceImpl implements IAppService {
      */
     @Override
     public boolean registry(RegistryParam registryParam) {
-        log.info("receive registry params: {}", registryParam);
-
-        int updateNum = serviceRegistryMapper.update(ServiceRegistry.builder()
-                        .appName(registryParam.getApp())
-                        .address(registryParam.getAddress())
-                        .status(registryParam.getRegisterStatusEnum().getValue())
-                        .updateTime(new Date()).build(),
-                Wrappers.<ServiceRegistry>lambdaQuery().eq(ServiceRegistry::getAppName, registryParam.getApp()).eq(ServiceRegistry::getAddress, registryParam.getAddress()));
-        log.info("update service registry info num: {}", updateNum);
-
-        if (updateNum < 1) {
-            //没有则存入注册信息
-            int insertNum = serviceRegistryMapper.insert(ServiceRegistry.builder()
-                    .appName(registryParam.getApp())
-                    .address(registryParam.getAddress())
-                    .status(registryParam.getRegisterStatusEnum().getValue())
-                    .build());
-
-            log.info("insert service registry info num: {}", insertNum);
-            return insertNum == 1;
-        }
-
-        return true;
+        return registryService.registry(registryParam);
     }
 
     @Override
@@ -83,53 +54,27 @@ public class AppServiceImpl implements IAppService {
 
     @Override
     public boolean updateTaskInfoById(TaskInfo taskInfo) {
-        if (Objects.isNull(taskInfo)) {
-            return false;
-        }
-
-        if (Objects.isNull(taskInfo.getId())) {
-            throw new IllegalArgumentException("task id can't be null");
-        }
-
-        return Objects.equals(taskInfoMapper.updateById(taskInfo), 1);
+        return taskService.updateTaskInfoById(taskInfo);
     }
 
     @Override
     public int batchUpdateTaskInfoById(List<TaskInfo> taskInfoList) {
-        if (CollectionUtil.isEmpty(taskInfoList)) {
-            return 0;
-        }
-
-        List<TaskInfo> canUpdateList = taskInfoList.stream()
-                .filter(tmpTask -> Objects.nonNull(tmpTask.getId())).collect(Collectors.toList());
-
-        if (CollectionUtil.isEmpty(canUpdateList)) {
-            log.info("All tasks have no id");
-            return 0;
-        }
-
-        AtomicInteger count = new AtomicInteger(0);
-        canUpdateList.forEach(taskInfo -> {
-            int updateNum = taskInfoMapper.updateById(taskInfo);
-            count.addAndGet(updateNum);
-        });
-
-        return count.get();
+        return taskService.batchUpdateTaskInfoById(taskInfoList);
     }
 
     @Override
     public boolean tryLock(String name, String owner) {
-        return false;
+        return lockService.insert(name, owner) > 0;
     }
 
     @Override
     public boolean unlock(String name, String owner) {
-        return false;
+        return lockService.delete(name, owner) > 0;
     }
 
     @Override
     public int removeTimeOutApp(int timeout) {
-        return 0;
+        return registryService.removeTimeOut(timeout);
     }
 
     @Override
@@ -138,7 +83,7 @@ public class AppServiceImpl implements IAppService {
     }
 
     @Override
-    public List<String> getAppAddressList(String app) {
-        return null;
+    public List<String> getAppAddressList() {
+        return registryService.listAvailableServiceList();
     }
 }
