@@ -1,5 +1,6 @@
 package com.ld.peach.job.admin.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.ld.peach.job.admin.mapper.ServiceRegistryMapper;
 import com.ld.peach.job.admin.mapper.TaskInfoMapper;
@@ -15,6 +16,8 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName TaskService
@@ -89,6 +92,29 @@ public class AppServiceImpl implements IAppService {
         }
 
         return Objects.equals(taskInfoMapper.updateById(taskInfo), 1);
+    }
+
+    @Override
+    public int batchUpdateTaskInfoById(List<TaskInfo> taskInfoList) {
+        if (CollectionUtil.isEmpty(taskInfoList)) {
+            return 0;
+        }
+
+        List<TaskInfo> canUpdateList = taskInfoList.stream()
+                .filter(tmpTask -> Objects.nonNull(tmpTask.getId())).collect(Collectors.toList());
+
+        if (CollectionUtil.isEmpty(canUpdateList)) {
+            log.info("All tasks have no id");
+            return 0;
+        }
+
+        AtomicInteger count = new AtomicInteger(0);
+        canUpdateList.forEach(taskInfo -> {
+            int updateNum = taskInfoMapper.updateById(taskInfo);
+            count.addAndGet(updateNum);
+        });
+
+        return count.get();
     }
 
     @Override

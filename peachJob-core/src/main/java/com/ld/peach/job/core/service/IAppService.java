@@ -51,6 +51,14 @@ public interface IAppService {
     boolean updateTaskInfoById(TaskInfo taskInfo);
 
     /**
+     * 批量更新 taskInfo
+     *
+     * @param taskInfoList 任务集合
+     * @return 更新数量
+     */
+    int batchUpdateTaskInfoById(List<TaskInfo> taskInfoList);
+
+    /**
      * 使用线程本地变量记录锁的持有者
      */
     ThreadLocal<String> ownerThreadLocal = new ThreadLocal<>();

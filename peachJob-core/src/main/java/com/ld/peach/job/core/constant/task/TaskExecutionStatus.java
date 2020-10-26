@@ -21,7 +21,8 @@ public enum TaskExecutionStatus {
      * 任务执行状态
      */
     NOT_EXECUTION(Short.parseShort("0"), "未执行"),
-    SUCCESS(Short.parseShort("1"), "执行成功"),
+    DISTRIBUTED(Short.parseShort("1"), "已分发"),
+    SUCCESS(Short.parseShort("2"), "执行成功"),
     FAIL(Short.parseShort("-1"), "执行失败"),
     ABANDONED(Short.parseShort("-2"), "任务废弃");
 

@@ -1,6 +1,7 @@
 package com.ld.peach.job.core.service;
 
 import cn.hutool.core.date.DateUtil;
+import com.ld.peach.job.core.constant.task.TaskExecutionStatus;
 import com.ld.peach.job.core.model.TaskInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -42,8 +43,17 @@ public class PeachJobHeartBeat implements Runnable {
             //进行任务分发
             PeachJobHelper.getTaskDisruptorTemplate().bulkPublish(canExecutedTaskList);
 
-            //TODO 这里应该分发超过执行时间的任务，失败过的任务，还是创建一个新的心跳任务？
+            List<TaskInfo> updateList = canExecutedTaskList.stream()
+                    .peek(taskInfo -> taskInfo.setStatus(TaskExecutionStatus.DISTRIBUTED.getCode()))
+                    .collect(Collectors.toList());
 
+            //批量更新发放状态
+            int updateNum = PeachJobHelper.getAppService().batchUpdateTaskInfoById(updateList);
+            if (updateNum > 0) {
+                log.info("[PeachJobHeartBeat] success distributed: {} tasks", updateNum);
+            }
+
+            //TODO 这里应该分发超过执行时间的任务，失败过的任务，还是创建一个新的心跳任务？
         } catch (Exception ex) {
             log.error("PeachJobHeartBeat occur error: ", ex);
         } finally {
