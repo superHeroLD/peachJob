@@ -2,6 +2,7 @@ package com.ld.peach.job.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.ld.peach.job.admin.mapper.ServiceRegistryMapper;
+import com.ld.peach.job.admin.mapper.TaskInfoMapper;
 import com.ld.peach.job.admin.service.TaskService;
 import com.ld.peach.job.core.model.ServiceRegistry;
 import com.ld.peach.job.core.model.TaskInfo;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @ClassName TaskService
@@ -26,9 +28,11 @@ import java.util.List;
 public class AppServiceImpl implements IAppService {
 
     @Resource
-    private ServiceRegistryMapper serviceRegistryMapper;
-    @Resource
     private TaskService taskService;
+    @Resource
+    private TaskInfoMapper taskInfoMapper;
+    @Resource
+    private ServiceRegistryMapper serviceRegistryMapper;
 
     /**
      * 服务注册
@@ -76,7 +80,15 @@ public class AppServiceImpl implements IAppService {
 
     @Override
     public boolean updateTaskInfoById(TaskInfo taskInfo) {
-        return false;
+        if (Objects.isNull(taskInfo)) {
+            return false;
+        }
+
+        if (Objects.isNull(taskInfo.getId())) {
+            throw new IllegalArgumentException("task id can't be null");
+        }
+
+        return Objects.equals(taskInfoMapper.updateById(taskInfo), 1);
     }
 
     @Override

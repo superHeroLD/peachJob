@@ -1,8 +1,10 @@
 package com.ld.peach.job.core.model;
 
+import cn.hutool.core.date.DateUtil;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.StringJoiner;
 
 /**
  * @ClassName TaskInfo
@@ -82,4 +84,24 @@ public class TaskInfo {
      * 执行结果
      */
     private String result;
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", TaskInfo.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("createTime=" + DateUtil.formatDate(createTime))
+                .add("updateTime=" + DateUtil.formatDate(updateTime))
+                .add("valid=" + valid)
+                .add("estimatedExecutionTime=" + estimatedExecutionTime)
+                .add("actualExecutionTime=" + actualExecutionTime)
+                .add("taskHandler='" + taskHandler + "'")
+                .add("taskName='" + taskName + "'")
+                .add("executeParams='" + executeParams + "'")
+                .add("maxRetryNum=" + maxRetryNum)
+                .add("executionTimes=" + executionTimes)
+                .add("status=" + status)
+                .add("executionStrategy=" + executionStrategy)
+                .add("result='" + result + "'")
+                .toString();
+    }
 }

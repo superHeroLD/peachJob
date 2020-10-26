@@ -19,5 +19,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TaskEvent {
 
+    /**
+     * 任务信息
+     */
     private TaskInfo taskInfo;
 }

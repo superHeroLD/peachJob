@@ -1,10 +1,13 @@
 package com.ld.peach.job.core.service;
 
+import cn.hutool.core.date.DateUtil;
 import com.ld.peach.job.core.model.TaskInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName PeachJobHeartBeat
@@ -31,8 +34,13 @@ public class PeachJobHeartBeat implements Runnable {
                 return;
             }
 
+            //过滤一下可以执行的任务 TODO 这里要不要写一个时间轮来控制任务的精确实行时间，精确到秒或者毫秒级别
+            Date now = new Date();
+            List<TaskInfo> canExecutedTaskList = unExecutedTaskList.stream()
+                    .filter(taskInfo -> DateUtil.compare(now, taskInfo.getEstimatedExecutionTime()) >= 0).collect(Collectors.toList());
+
             //进行任务分发
-            PeachJobHelper.getTaskDisruptorTemplate().bulkPublish(unExecutedTaskList);
+            PeachJobHelper.getTaskDisruptorTemplate().bulkPublish(canExecutedTaskList);
 
             //TODO 这里应该分发超过执行时间的任务，失败过的任务，还是创建一个新的心跳任务？
 
@@ -41,7 +49,5 @@ public class PeachJobHeartBeat implements Runnable {
         } finally {
 
         }
-
-        log.info("PeachJobHeartBeat end");
     }
 }

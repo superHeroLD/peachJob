@@ -10,7 +10,7 @@ import java.util.UUID;
 
 /**
  * @InterfaceName IJobService
- * @Description TODO
+ * @Description 一些常用的接口集合Service层
  * @Author lidong
  * @Date 2020/9/28
  * @Version 1.0
@@ -38,7 +38,7 @@ public interface IAppService {
      * 根据 任务ID 获取任务信息对象
      *
      * @param id 任务 ID
-     * @return
+     * @return 获取任务信息
      */
     TaskInfo getTaskInfoById(Long id);
 
@@ -46,7 +46,7 @@ public interface IAppService {
      * 根据 任务ID 更新任务信息
      *
      * @param taskInfo 任务信息对象
-     * @return
+     * @return 是否更新成功
      */
     boolean updateTaskInfoById(TaskInfo taskInfo);
 
