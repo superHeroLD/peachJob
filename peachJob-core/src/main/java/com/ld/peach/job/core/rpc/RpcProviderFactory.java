@@ -229,7 +229,7 @@ public class RpcProviderFactory {
             return jobsRpcResponse;
         }
 
-        if (StringUtil.isBlank(accessToken) || !accessToken.trim().equals(jobsRpcRequest.getAccessToken())) {
+        if (StringUtil.isNotBlank(accessToken) && !accessToken.trim().equals(jobsRpcRequest.getAccessToken())) {
             jobsRpcResponse.setErrorMsg("The access token[" + jobsRpcRequest.getAccessToken() + "] is wrong.");
             return jobsRpcResponse;
         }

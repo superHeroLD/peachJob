@@ -88,7 +88,7 @@ public class TaskScheduler implements InitializingBean, DisposableBean {
                 new HessianSerializer(),
                 null,
                 0,
-                "peach job",
+                PeachJobHelper.getJobsProperties().getAdminAccessToken(),
                 null,
                 null);
 

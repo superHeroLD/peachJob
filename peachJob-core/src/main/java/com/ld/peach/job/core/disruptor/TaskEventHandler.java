@@ -48,7 +48,16 @@ public class TaskEventHandler implements EventHandler<TaskEvent> {
             return;
         }
 
-        log.info("Task execution: {}", taskInfo);
-        TaskDispatchCenter.processTask(taskInfo);
+        boolean result = TaskDispatchCenter.processTask(taskInfo);
+        log.info("Task execution: {} result: {}", taskInfo, result);
+
+        if (Boolean.FALSE == result) {
+            taskInfo.setStatus(TaskExecutionStatus.FAIL.getCode());
+        } else {
+            taskInfo.setStatus(TaskExecutionStatus.SUCCESS.getCode());
+        }
+
+        taskInfo.setExecutionTimes(taskInfo.getExecutionTimes() + 1);
+        PeachJobHelper.getAppService().updateTaskInfoById(taskInfo);
     }
 }

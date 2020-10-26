@@ -57,4 +57,5 @@ mybatis-plus:
 
 # peach-job
 peach-job:
-  appAccessToken: peach job
+  app-access-token: hello little peach
+  admin-access-token: hello little peach

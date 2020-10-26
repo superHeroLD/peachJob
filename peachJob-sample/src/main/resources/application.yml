@@ -7,6 +7,8 @@ peach-job:
   admin-address: http://127.0.0.1:8088
   app-name: peach-job-sample
   app-port: 9876
+  app-access-token: hello little peach
+  admin-access-token: hello little peach
 
 # log config
 logging:
