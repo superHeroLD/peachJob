@@ -1,8 +1,10 @@
 package com.ld.peach.job.core.disruptor;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.json.JSONUtil;
 import com.ld.peach.job.core.constant.task.TaskExecutionStatus;
 import com.ld.peach.job.core.dispatch.TaskDispatchCenter;
+import com.ld.peach.job.core.generic.TaskResponse;
 import com.ld.peach.job.core.model.TaskInfo;
 import com.ld.peach.job.core.service.PeachJobHelper;
 import com.lmax.disruptor.EventHandler;
@@ -48,13 +50,19 @@ public class TaskEventHandler implements EventHandler<TaskEvent> {
             return;
         }
 
-        boolean result = TaskDispatchCenter.processTask(taskInfo);
-        log.info("Task execution: {} result: {}", taskInfo, result);
+        TaskResponse response = TaskDispatchCenter.processTask(taskInfo);
+        log.info("Task execution: {} response: {}", taskInfo, response);
 
-        if (Boolean.FALSE == result) {
+        //TODO 这里应该记录执行日志
+
+        if (Objects.isNull(response) || !response.isSuccess()) {
             taskInfo.setStatus(TaskExecutionStatus.FAIL.getCode());
         } else {
             taskInfo.setStatus(TaskExecutionStatus.SUCCESS.getCode());
+            taskInfo.setActualExecutionTime(new Date());
+            if (Objects.nonNull(response.getData())) {
+                taskInfo.setResult(JSONUtil.toJsonStr(response.getData()));
+            }
         }
 
         taskInfo.setExecutionTimes(taskInfo.getExecutionTimes() + 1);

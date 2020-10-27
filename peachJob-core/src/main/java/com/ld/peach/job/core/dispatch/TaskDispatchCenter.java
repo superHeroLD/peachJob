@@ -1,7 +1,6 @@
 package com.ld.peach.job.core.dispatch;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.ld.peach.job.core.constant.task.TaskExecutionStatus;
 import com.ld.peach.job.core.exception.helper.ExceptionHelper;
 import com.ld.peach.job.core.executor.ITaskExecutor;
 import com.ld.peach.job.core.generic.TaskResponse;
@@ -32,16 +31,16 @@ public class TaskDispatchCenter {
      * @param taskInfo 任务信息
      * @return 是否处理成功
      */
-    public static boolean processTask(TaskInfo taskInfo) {
+    public static TaskResponse processTask(TaskInfo taskInfo) {
         if (Objects.isNull(taskInfo)) {
-            return false;
+            return TaskResponse.fail();
         }
 
         //获取所有可用服务节点地址
         List<String> appAddressList = PeachJobHelper.getAppService().getAppAddressList();
         if (CollectionUtil.isEmpty(appAddressList)) {
             log.error("[TaskDispatchCenter] no service address available, dispatch task id: [{}] fail", taskInfo.getId());
-            return false;
+            return TaskResponse.fail("no service address available");
         }
 
         //路由算法-简单Hash
@@ -55,17 +54,14 @@ public class TaskDispatchCenter {
 
         if (StringUtil.isBlank(address)) {
             log.error("[TaskDispatchCenter] no service address available, dispatch task id: [{}] fail", taskInfo.getId());
-            return false;
+            return TaskResponse.fail("no service address available");
         }
 
         DispatchParam dispatchParam = new DispatchParam().setHandler(taskInfo.getTaskHandler())
                 .setParam(taskInfo.getExecuteParams())
                 .setTaskId(taskInfo.getId());
 
-        TaskResponse response = runExecutor(dispatchParam, address, taskInfo, appAddressList, taskInfo.getMaxRetryNum(), taskInfo.getExecutionTimes());
-
-
-        return response.isSuccess();
+        return runExecutor(dispatchParam, address, taskInfo, appAddressList, taskInfo.getMaxRetryNum(), taskInfo.getExecutionTimes());
     }
 
 
@@ -84,16 +80,6 @@ public class TaskDispatchCenter {
         } catch (Exception ex) {
             response = TaskResponse.fail(ExceptionHelper.getErrorInfo(ex));
         }
-
-        if (response.isSuccess()) {
-            //更新任务执行状态
-            taskInfo.setStatus(TaskExecutionStatus.SUCCESS.getCode());
-        } else {
-            taskInfo.setStatus(TaskExecutionStatus.FAIL.getCode());
-        }
-
-        taskInfo.setExecutionTimes(taskInfo.getExecutionTimes() + 1);
-        PeachJobHelper.getAppService().updateTaskInfoById(taskInfo);
 
         //TODO 在这里重试还是在调度一次重试呢？
 
