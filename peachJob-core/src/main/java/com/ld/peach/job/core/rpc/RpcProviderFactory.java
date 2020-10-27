@@ -10,6 +10,7 @@ import com.ld.peach.job.core.rpc.server.PeachHttpServer;
 import com.ld.peach.job.core.util.IpUtil;
 import com.ld.peach.job.core.util.NetUtil;
 import com.ld.peach.job.core.util.StringUtil;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
@@ -26,6 +27,7 @@ import static com.ld.peach.job.core.constant.TaskConstant.THREE_MINS_MILLIS;
  * @Date 2020/9/15
  * @Version 1.0
  */
+@Data
 @Slf4j
 public class RpcProviderFactory {
 
@@ -44,24 +46,9 @@ public class RpcProviderFactory {
     private IPeachJobRpcSerializer serializer;
 
     private Class<? extends IServiceRegistry> serviceRegistryClass;
+
     private Map<String, String> serviceRegistryParam;
 
-
-    public String getIp() {
-        return ip;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public IPeachJobRpcSerializer getSerializer() {
-        return serializer;
-    }
 
     /**
      * 初始化配置

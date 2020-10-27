@@ -16,7 +16,7 @@ import java.io.OutputStream;
 
 /**
  * @ClassName ServletServerHandler
- * @Description Servlet Handler
+ * @Description Servlet Handler deal with http
  * @Author lidong
  * @Date 2020/10/20
  * @Version 1.0
@@ -33,33 +33,22 @@ public class ServletServerHandler {
     /**
      * handle servlet request
      */
-    public void handle(String target, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        if ("/services".equals(target)) {
+    public void handle(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        PeachRpcRequest rpcRequest;
 
-            StringBuilder stringBuilder = new StringBuilder("<ui>");
-            for (String serviceKey : rpcProviderFactory.getServiceData().keySet()) {
-                stringBuilder.append("<li>").append(serviceKey).append(": ").append(rpcProviderFactory.getServiceData().get(serviceKey)).append("</li>");
-            }
-            stringBuilder.append("</ui>");
-
-            writeResponse(response, stringBuilder.toString().getBytes());
-        } else {
-            PeachRpcRequest rpcRequest;
-
-            try {
-                rpcRequest = parseRequest(request);
-            } catch (Exception e) {
-                writeResponse(response, ExceptionHelper.getErrorInfo(e).getBytes());
-                return;
-            }
-
-            // invoke
-            PeachRpcResponse rpcResponse = rpcProviderFactory.invokeService(rpcRequest);
-
-            // response-serialize + response-write
-            byte[] responseBytes = rpcProviderFactory.getSerializer().serialize(rpcResponse);
-            writeResponse(response, responseBytes);
+        try {
+            rpcRequest = parseRequest(request);
+        } catch (Exception e) {
+            writeResponse(response, ExceptionHelper.getErrorInfo(e).getBytes());
+            return;
         }
+
+        // invoke
+        PeachRpcResponse rpcResponse = rpcProviderFactory.invokeService(rpcRequest);
+
+        // response-serialize + response-write
+        byte[] responseBytes = rpcProviderFactory.getSerializer().serialize(rpcResponse);
+        writeResponse(response, responseBytes);
     }
 
     /**

@@ -36,7 +36,7 @@ public class PeachJobHeartBeat implements Runnable {
     public void run() {
         log.info("PeachJobHeartBeat begin");
 
-        IAppService appService = PeachJobHelper.getAppService();
+        IAdminService appService = PeachJobHelper.getAppService();
 
         try {
             if (appService.tryLock(TaskConstant.DEFAULT_LOCK_KEY)) {

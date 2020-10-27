@@ -9,7 +9,7 @@ import com.ld.peach.job.core.rpc.invoker.reference.RpcReferenceBean;
 import com.ld.peach.job.core.rpc.registry.ExecutorRegistryThread;
 import com.ld.peach.job.core.rpc.registry.IServiceRegistry;
 import com.ld.peach.job.core.rpc.serialize.IPeachJobRpcSerializer;
-import com.ld.peach.job.core.service.IAppService;
+import com.ld.peach.job.core.service.IAdminService;
 import com.ld.peach.job.core.util.IpUtil;
 import com.ld.peach.job.core.util.NetUtil;
 import com.ld.peach.job.core.util.StringUtil;
@@ -108,31 +108,30 @@ public abstract class AbstractTaskExecutor {
     /**
      * Jobs Admin
      */
-    private static List<IAppService> TASK_SERVICE_LIST;
+    private static List<IAdminService> ADMIN_SERVICE_LIST;
 
-    public static List<IAppService> getTaskServiceList() {
-        return TASK_SERVICE_LIST;
+    public static List<IAdminService> getAdminServiceList() {
+        return ADMIN_SERVICE_LIST;
     }
 
     private void initJobsAdminList(String adminAddress, String accessToken) throws Exception {
         if (StringUtil.isNotBlank(adminAddress)) {
-            if (Objects.isNull(TASK_SERVICE_LIST)) {
-                TASK_SERVICE_LIST = new ArrayList<>();
+            if (Objects.isNull(ADMIN_SERVICE_LIST)) {
+                ADMIN_SERVICE_LIST = new ArrayList<>();
             }
 
             String[] addressArr = adminAddress.trim().split(TaskConstant.COMMA);
-
             if (addressArr.length <= 0) {
                 return;
             }
 
             for (String address : addressArr) {
                 if (StringUtil.isNotBlank(address)) {
-                    String addressUrl = address.concat(TaskConstant.TASK_API);
-                    IAppService taskAdmin = (IAppService) new RpcReferenceBean(
+                    String addressUrl = address.concat(TaskConstant.REGISTER_API);
+                    IAdminService appService = (IAdminService) new RpcReferenceBean(
                             getRpcSerializer(),
                             CallType.SYNC,
-                            IAppService.class,
+                            IAdminService.class,
                             null,
                             1000,
                             addressUrl,
@@ -141,7 +140,7 @@ public abstract class AbstractTaskExecutor {
                             null
                     ).getObject();
 
-                    TASK_SERVICE_LIST.add(taskAdmin);
+                    ADMIN_SERVICE_LIST.add(appService);
                 }
             }
         }

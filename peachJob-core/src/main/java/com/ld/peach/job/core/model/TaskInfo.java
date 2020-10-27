@@ -3,6 +3,7 @@ package com.ld.peach.job.core.model;
 import cn.hutool.core.date.DateUtil;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.StringJoiner;
 
@@ -14,7 +15,7 @@ import java.util.StringJoiner;
  * @Version 1.0
  */
 @Data
-public class TaskInfo {
+public class TaskInfo implements Serializable {
     /**
      * 任务主键ID
      */

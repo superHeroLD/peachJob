@@ -6,7 +6,7 @@ import com.ld.peach.job.core.rpc.RpcProviderFactory;
 import com.ld.peach.job.core.rpc.invoker.call.CallType;
 import com.ld.peach.job.core.rpc.invoker.reference.RpcReferenceBean;
 import com.ld.peach.job.core.rpc.serialize.impl.HessianSerializer;
-import com.ld.peach.job.core.service.IAppService;
+import com.ld.peach.job.core.service.IAdminService;
 import com.ld.peach.job.core.service.PeachJobHeartBeat;
 import com.ld.peach.job.core.service.PeachJobHelper;
 import com.ld.peach.job.core.util.StringUtil;
@@ -93,17 +93,16 @@ public class TaskScheduler implements InitializingBean, DisposableBean {
                 null);
 
         //服务注册
-        rpcProviderFactory.addService(IAppService.class.getName(), null, PeachJobHelper.getAppService());
+        rpcProviderFactory.addService(IAdminService.class.getName(), null, PeachJobHelper.getAppService());
 
-        // servlet handler
         servletServerHandler = new ServletServerHandler(this.rpcProviderFactory);
     }
 
     public static void invokeAdminService(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        servletServerHandler.handle(null, request, response);
+        servletServerHandler.handle(request, response);
     }
 
-    private static Map<String, ITaskExecutor> TASK_EXECUTOR = new ConcurrentHashMap<>();
+    private static final Map<String, ITaskExecutor> TASK_EXECUTOR = new ConcurrentHashMap<>();
 
     public static ITaskExecutor getTaskExecutor(String address) {
         if (StringUtil.isBlank(address)) {

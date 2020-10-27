@@ -16,7 +16,23 @@ import java.util.concurrent.ThreadLocalRandom;
  * @Date 2020/9/28
  * @Version 1.0
  */
-public interface IAppService {
+public interface IAdminService {
+
+    /**
+     * 发布任务
+     *
+     * @param taskInfo 任务信息
+     * @return 发布数量
+     */
+    int publishTask(TaskInfo taskInfo);
+
+    /**
+     * 批量发布任务信息
+     *
+     * @param taskInfoList 任务信息
+     * @return 发布数量
+     */
+    int batchPublishTask(List<TaskInfo> taskInfoList);
 
     /**
      * 节点注册

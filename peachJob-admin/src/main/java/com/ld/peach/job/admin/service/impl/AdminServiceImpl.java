@@ -5,7 +5,7 @@ import com.ld.peach.job.admin.service.RegistryService;
 import com.ld.peach.job.admin.service.TaskService;
 import com.ld.peach.job.core.model.TaskInfo;
 import com.ld.peach.job.core.model.params.RegistryParam;
-import com.ld.peach.job.core.service.IAppService;
+import com.ld.peach.job.core.service.IAdminService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class AppServiceImpl implements IAppService {
+public class AdminServiceImpl implements IAdminService {
 
     @Resource
     private TaskService taskService;
@@ -30,12 +30,17 @@ public class AppServiceImpl implements IAppService {
     @Resource
     private LockService lockService;
 
-    /**
-     * 服务注册
-     *
-     * @param registryParam 注册参数
-     * @return 是否注册成功
-     */
+    @Override
+    public int publishTask(TaskInfo taskInfo) {
+        log.info("receive task: {}", taskInfo);
+        return taskService.insertTask(taskInfo);
+    }
+
+    @Override
+    public int batchPublishTask(List<TaskInfo> taskInfoList) {
+        return taskService.batchInsertTask(taskInfoList);
+    }
+
     @Override
     public boolean registry(RegistryParam registryParam) {
         return registryService.registry(registryParam);
@@ -46,10 +51,9 @@ public class AppServiceImpl implements IAppService {
         return taskService.getUnExecutedTaskList(timeInterVal);
     }
 
-
     @Override
     public TaskInfo getTaskInfoById(Long id) {
-        return null;
+        return taskService.getTaskInfoById(id);
     }
 
     @Override

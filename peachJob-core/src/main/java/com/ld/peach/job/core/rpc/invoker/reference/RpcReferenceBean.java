@@ -15,6 +15,7 @@ import com.ld.peach.job.core.rpc.invoker.common.PeachRpcGenericService;
 import com.ld.peach.job.core.rpc.serialize.IPeachJobRpcSerializer;
 import com.ld.peach.job.core.util.ClassUtil;
 import com.ld.peach.job.core.util.StringUtil;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Proxy;
@@ -31,6 +32,7 @@ import java.util.concurrent.TimeUnit;
  * @Version 1.0
  */
 @Slf4j
+@Getter
 public class RpcReferenceBean {
 
     /**
@@ -72,21 +74,6 @@ public class RpcReferenceBean {
 
     private PeachRpcInvokerFactory invokerFactory;
 
-    public PeachRpcInvokerFactory getInvokerFactory() {
-        return invokerFactory;
-    }
-
-    public IPeachJobRpcSerializer getSerializer() {
-        return serializer;
-    }
-
-    public long getTimeout() {
-        return timeout;
-    }
-
-    public Class<?> getObjectType() {
-        return iface;
-    }
 
     public RpcReferenceBean(IPeachJobRpcSerializer serializer,
                             CallType callType,
@@ -203,6 +190,7 @@ public class RpcReferenceBean {
 
                 }
             }
+
             if (StringUtil.isBlank(finalAddress)) {
                 throw new PeachRpcException("peach-rpc reference bean[" + className + "] address empty");
             }
@@ -238,7 +226,7 @@ public class RpcReferenceBean {
 
                     return rpcResponse.getResult();
                 } catch (Exception e) {
-                    log.info("peach-rpc, invoke error, address: [{}] callType: [{}] RPC Request: {}", finalAddress, callType, rpcRequest);
+                    log.error("peach-rpc invoke error, address: [{}] callType: [{}] RPC Request: {}", finalAddress, callType, rpcRequest);
                     throw (e instanceof PeachRpcException) ? e : new PeachRpcException(e);
                 } finally {
                     futureResponse.removeInvokerFuture();

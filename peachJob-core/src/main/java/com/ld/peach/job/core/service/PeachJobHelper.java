@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 public class PeachJobHelper implements InitializingBean {
 
     @Resource
-    private IAppService appService;
+    private IAdminService appService;
     @Resource
     private JobsProperties jobsProperties;
     @Resource
@@ -34,13 +34,12 @@ public class PeachJobHelper implements InitializingBean {
         PEACH_JOB_HELPER = this;
     }
 
-
     /**
      * 获取 appService
      *
      * @return IAppService 实现实例，如果spring中没有会报错
      */
-    public static IAppService getAppService() {
+    public static IAdminService getAppService() {
         return PEACH_JOB_HELPER.appService;
     }
 
@@ -70,5 +69,4 @@ public class PeachJobHelper implements InitializingBean {
     public static IPeachJobRpcSerializer getRpcSerializer() {
         return PEACH_JOB_HELPER.rpcSerializer;
     }
-
 }

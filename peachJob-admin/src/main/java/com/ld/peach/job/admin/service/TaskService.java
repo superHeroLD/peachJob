@@ -33,6 +33,54 @@ public class TaskService {
     private TaskInfoMapper taskInfoMapper;
 
     /**
+     * 插入任务信息到 DB
+     *
+     * @param taskInfo 任务信息
+     * @return 插入数量
+     */
+    public int insertTask(TaskInfo taskInfo) {
+        if (Objects.isNull(taskInfo)) {
+            return 0;
+        }
+
+        taskInfo.setId(null);
+        return taskInfoMapper.insert(taskInfo);
+    }
+
+    /**
+     * 根据ID获取任务信息
+     *
+     * @param id 任务ID
+     * @return 任务信息
+     */
+    public TaskInfo getTaskInfoById(Long id) {
+        if (Objects.isNull(id) || id <= 0) {
+            return null;
+        }
+
+        return taskInfoMapper.selectById(id);
+    }
+
+    /**
+     * 批量插入任务
+     *
+     * @param taskInfoList 任务集合
+     * @return 插入数量
+     */
+    public int batchInsertTask(List<TaskInfo> taskInfoList) {
+        if (CollectionUtil.isEmpty(taskInfoList)) {
+            return 0;
+        }
+
+        int count = 0;
+        for (TaskInfo taskInfo : taskInfoList) {
+            count += taskInfoMapper.insert(taskInfo);
+        }
+
+        return count;
+    }
+
+    /**
      * 获取未执行任务列表
      *
      * @param timeInterVal 时间间隔
@@ -47,23 +95,11 @@ public class TaskService {
         DateTime startTime = DateUtil.offsetMinute(new Date(), -timeInterVal);
         DateTime endTime = DateUtil.offsetMinute(new Date(), timeInterVal);
 
-        log.info("startTime: {} endTime: {}", startTime, endTime);
-
         List<TaskInfo> canExecutedTaskList = taskInfoMapper.selectList(Wrappers.<TaskInfo>lambdaQuery()
                 .in(TaskInfo::getStatus, Arrays.asList(TaskExecutionStatus.NOT_EXECUTION.getCode(), TaskExecutionStatus.FAIL.getCode())).between(TaskInfo::getEstimatedExecutionTime, startTime, endTime));
         log.info("canExecutedTaskList size: {} between startTime: {} endTime: {}", Objects.isNull(canExecutedTaskList) ? 0 : canExecutedTaskList.size(), startTime, endTime);
 
         return canExecutedTaskList;
-    }
-
-    /**
-     * 插入任务信息到 DB
-     *
-     * @param taskInfo 任务信息
-     * @return 插入数量
-     */
-    public Integer insertTask(TaskInfo taskInfo) {
-        return taskInfoMapper.insert(taskInfo);
     }
 
     /**
