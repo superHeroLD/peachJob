@@ -68,5 +68,7 @@ public class TaskSpringExecutor extends AbstractTaskExecutor implements Applicat
                 putTaskHandler(taskHandler, (ITaskHandler) applicationContext.getBean(taskHandler));
             }
         }
+
+
     }
 }

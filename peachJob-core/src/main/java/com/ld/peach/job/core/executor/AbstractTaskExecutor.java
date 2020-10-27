@@ -209,6 +209,7 @@ public abstract class AbstractTaskExecutor {
 
     /**
      * jobsHandler cache
+     * Spring 中的类都是小写开头
      */
     private static Map<String, ITaskHandler> TASKS_HANDLER = new ConcurrentHashMap<>();
 
