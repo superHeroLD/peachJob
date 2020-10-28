@@ -47,7 +47,6 @@ public class PeachJobHeartBeat implements Runnable {
                 List<TaskInfo> unExecutedTaskList = appService.getUnExecutedTaskList(PeachJobHelper.getJobsProperties().getTaskQueryInterval());
 
                 if (CollectionUtils.isEmpty(unExecutedTaskList)) {
-                    log.info("[PeachJobHeartBeat] There is no task can be performed");
                     return;
                 }
 

@@ -12,15 +12,14 @@ import lombok.ToString;
  * @Version 1.0
  */
 @Getter
-@ToString
 @AllArgsConstructor
 public enum ResponseCode {
 
     /**
      * 请求响应码
      */
-    SUCCESS(TaskConstant.CODE_SUCCESS, "成功"),
-    FAIL(TaskConstant.CODE_FAILED, "失败");
+    SUCCESS(TaskConstant.CODE_SUCCESS, "200"),
+    FAIL(TaskConstant.CODE_FAILED, "500");
 
     private final int code;
 

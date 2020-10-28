@@ -18,15 +18,14 @@ import java.util.concurrent.TimeoutException;
  */
 public class PeachRpcFutureResponse implements Future<PeachRpcResponse> {
 
-    private PeachRpcInvokerFactory invokerFactory;
+    private final PeachRpcInvokerFactory invokerFactory;
 
-    private PeachRpcRequest request;
+    private final PeachRpcRequest request;
+
     private PeachRpcResponse response;
 
-    /**
-     * future lock
-     */
     private boolean done = false;
+
     private final Object lock = new Object();
 
     private PeachRpcInvokeCallback invokeCallback;

@@ -1,7 +1,6 @@
 package com.ld.peach.job.sample.client;
 
 import com.ld.peach.job.core.client.PeachJobClient;
-import com.ld.peach.job.core.exception.PeachTaskException;
 import com.ld.peach.job.core.model.TaskInfo;
 import com.ld.peach.job.core.model.builder.PeachTaskBuilder;
 import lombok.extern.slf4j.Slf4j;

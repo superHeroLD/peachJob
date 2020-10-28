@@ -109,20 +109,18 @@ public class TaskScheduler implements InitializingBean, DisposableBean {
             return null;
         }
 
-        // load-cache
         address = address.trim();
         ITaskExecutor taskExecutor = TASK_EXECUTOR.get(address);
         if (Objects.nonNull(taskExecutor)) {
             return taskExecutor;
         }
 
-        // set-cache
         taskExecutor = (ITaskExecutor) new RpcReferenceBean(
                 PeachJobHelper.getRpcSerializer(),
                 CallType.SYNC,
                 ITaskExecutor.class,
                 null,
-                5000,
+                2000,
                 address,
                 PeachJobHelper.getJobsProperties().getAppAccessToken(),
                 null,

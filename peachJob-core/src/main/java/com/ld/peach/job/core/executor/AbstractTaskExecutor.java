@@ -127,7 +127,7 @@ public abstract class AbstractTaskExecutor {
 
             for (String address : addressArr) {
                 if (StringUtil.isNotBlank(address)) {
-                    String addressUrl = address.concat(TaskConstant.REGISTER_API);
+                    String addressUrl = address.concat(TaskConstant.ADMIN_SERVICE_API);
                     IAdminService appService = (IAdminService) new RpcReferenceBean(
                             getRpcSerializer(),
                             CallType.SYNC,

@@ -74,7 +74,7 @@ public class PeachRpcInvokerFactory {
         stopCallbackList.add(callback);
     }
 
-    private ConcurrentMap<String, PeachRpcFutureResponse> futureResponsePool = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, PeachRpcFutureResponse> futureResponsePool = new ConcurrentHashMap<>();
 
     public void setInvokerFuture(String requestId, PeachRpcFutureResponse futureResponse) {
         futureResponsePool.put(requestId, futureResponse);

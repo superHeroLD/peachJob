@@ -2,9 +2,7 @@ package com.ld.peach.job.core.generic;
 
 import com.ld.peach.job.core.constant.ResponseCode;
 import com.ld.peach.job.core.constant.TaskConstant;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -17,8 +15,6 @@ import java.util.Objects;
  * @Version 1.0
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class TaskResponse<T> implements Serializable {
 
     /**
@@ -36,24 +32,22 @@ public class TaskResponse<T> implements Serializable {
      */
     private T data;
 
-    public TaskResponse(ResponseCode responseCode, T data) {
-        new TaskResponse<>(responseCode.getCode(), responseCode.getMsg(), data);
+    public TaskResponse(int code, String msg, T data) {
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
     }
 
     public static <T> TaskResponse<T> success(T data) {
-        return new TaskResponse<>(ResponseCode.SUCCESS, data);
+        return new TaskResponse<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMsg(), data);
     }
 
     public static <T> TaskResponse<T> success() {
-        return new TaskResponse<>(ResponseCode.SUCCESS, null);
-    }
-
-    public static <T> TaskResponse<T> fail(T data) {
-        return new TaskResponse<>(ResponseCode.FAIL, data);
+        return new TaskResponse<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMsg(), null);
     }
 
     public static <T> TaskResponse<T> fail() {
-        return new TaskResponse<>(ResponseCode.FAIL, null);
+        return new TaskResponse<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMsg(), null);
     }
 
     public static <T> TaskResponse<T> fail(String msg) {

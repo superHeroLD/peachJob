@@ -51,7 +51,7 @@ public interface TaskConstant {
     /**
      * API URI
      */
-    String REGISTER_API = "/register-api";
+    String ADMIN_SERVICE_API = "/adminService-api";
 
     /**
      * 三分钟毫秒

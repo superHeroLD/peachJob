@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class ApiController {
 
-    @RequestMapping(TaskConstant.REGISTER_API)
+    @RequestMapping(TaskConstant.ADMIN_SERVICE_API)
     public void api(HttpServletRequest request, HttpServletResponse response) throws Exception {
         TaskScheduler.invokeAdminService(request, response);
     }
