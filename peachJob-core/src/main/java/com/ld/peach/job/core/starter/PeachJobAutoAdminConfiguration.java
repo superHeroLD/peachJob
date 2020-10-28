@@ -5,18 +5,19 @@ import com.ld.peach.job.core.disruptor.TaskEvent;
 import com.ld.peach.job.core.disruptor.TaskEventHandler;
 import com.ld.peach.job.core.rpc.serialize.IPeachJobRpcSerializer;
 import com.ld.peach.job.core.rpc.serialize.impl.HessianSerializer;
-import com.lmax.disruptor.RingBuffer;
-import com.lmax.disruptor.SleepingWaitStrategy;
-import com.lmax.disruptor.dsl.Disruptor;
+import com.lmax.disruptor.*;
 import com.lmax.disruptor.dsl.ProducerType;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @ClassName PeachJobAutoAdminConfig
@@ -29,6 +30,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @EnableConfigurationProperties(JobsProperties.class)
 public class PeachJobAutoAdminConfiguration {
 
+    private static final int WORKER_SIZE = Runtime.getRuntime().availableProcessors();
+
     @Bean
     @ConditionalOnMissingBean
     public IPeachJobRpcSerializer rpcSerializer() {
@@ -36,6 +39,7 @@ public class PeachJobAutoAdminConfiguration {
     }
 
     @Bean
+    @Scope("prototype")
     @ConditionalOnMissingBean
     public TaskEventHandler taskEventHandler() {
         return new TaskEventHandler();
@@ -47,52 +51,44 @@ public class PeachJobAutoAdminConfiguration {
     }
 
     @Bean
-    @ConditionalOnClass({Disruptor.class})
-    public Disruptor<TaskEvent> disruptor(TaskEventHandler taskEventHandler) {
+    @ConditionalOnClass({RingBuffer.class})
+    public RingBuffer<TaskEvent> disruptorRingBuffer() {
 
-        //disruptor 默认配置
-        Disruptor<TaskEvent> disruptor = new Disruptor<>(TaskEvent::new, 256 * 1024,
-                new ThreadFactory() {
-                    final AtomicInteger count = new AtomicInteger(0);
+        RingBuffer<TaskEvent> ringBuffer = RingBuffer.create(ProducerType.MULTI, TaskEvent::new, 256 * 1024, new SleepingWaitStrategy());
 
-                    @Override
-                    public Thread newThread(Runnable r) {
-                        Thread t = new Thread(r, "Disruptor-Thread-[" + count.getAndIncrement() + "]");
-                        t.setDaemon(true);
-                        return t;
-                    }
-                }, ProducerType.MULTI, new SleepingWaitStrategy());
+        SequenceBarrier sequenceBarrier = ringBuffer.newBarrier();
 
-        disruptor.handleEventsWith(taskEventHandler);
+        ThreadPoolExecutor workerExecutor = new ThreadPoolExecutor(WORKER_SIZE, WORKER_SIZE, 0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingDeque<>(100), new ThreadFactory() {
+            private int counter = 0;
 
-        // 启动
-        disruptor.start();
+            @Override
+            public Thread newThread(Runnable r) {
+                return new Thread(r, "DisruptorWorker-" + counter++);
+            }
+        });
+
+        //初始化消费者
+        WorkHandler<TaskEvent>[] consumers = new TaskEventHandler[WORKER_SIZE];
+        for (int i = 0; i < WORKER_SIZE; i++) {
+            consumers[i] = new TaskEventHandler();
+        }
+
+        WorkerPool<TaskEvent> workerPool = new WorkerPool<>(ringBuffer, sequenceBarrier, new IgnoreExceptionHandler(), consumers);
+        ringBuffer.addGatingSequences(workerPool.getWorkerSequences());
+        workerPool.start(workerExecutor);
+
 
         // WEB 容器关闭执行
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
-                // OK
-                disruptor.shutdown();
-
-                // wait up to 10 seconds for the ringbuffer to drain
-                RingBuffer<TaskEvent> ringBuffer = disruptor.getRingBuffer();
-                for (int i = 0; i < 20; i++) {
-                    if (ringBuffer.hasAvailableCapacity(ringBuffer.getBufferSize())) {
-                        break;
-                    }
-                    try {
-                        // give ringbuffer some time to drain...
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        // ignored
-                    }
-                }
-                disruptor.shutdown();
+                workerPool.drainAndHalt();
             } catch (Exception e) {
                 // to do nothing
             }
         }));
 
-        return disruptor;
+
+        return ringBuffer;
     }
 }

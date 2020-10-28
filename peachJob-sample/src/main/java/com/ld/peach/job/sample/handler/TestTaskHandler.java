@@ -21,6 +21,6 @@ public class TestTaskHandler implements ITaskHandler {
     public TaskResponse execute(String params) throws PeachTaskException {
         log.info("[TestTaskHandler] receive params: {}", params);
 
-        return TaskResponse.success("Test Result");
+        return TaskResponse.success("TestTask success");
     }
 }

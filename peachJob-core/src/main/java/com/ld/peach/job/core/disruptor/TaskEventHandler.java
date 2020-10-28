@@ -8,6 +8,7 @@ import com.ld.peach.job.core.generic.TaskResponse;
 import com.ld.peach.job.core.model.TaskInfo;
 import com.ld.peach.job.core.service.PeachJobHelper;
 import com.lmax.disruptor.EventHandler;
+import com.lmax.disruptor.WorkHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
@@ -21,10 +22,10 @@ import java.util.Objects;
  * @Version 1.0
  */
 @Slf4j
-public class TaskEventHandler implements EventHandler<TaskEvent> {
+public class TaskEventHandler implements WorkHandler<TaskEvent> {
 
     @Override
-    public void onEvent(TaskEvent event, long sequence, boolean endOfBatch) throws Exception {
+    public void onEvent(TaskEvent event) throws Exception {
         if (Objects.isNull(event) || Objects.isNull(event.getTaskInfo())) {
             log.error("TaskEventHandler receive null task event");
         }
@@ -51,7 +52,7 @@ public class TaskEventHandler implements EventHandler<TaskEvent> {
         }
 
         TaskResponse response = TaskDispatchCenter.processTask(taskInfo);
-        log.info("Task execution: {} response: {}", taskInfo, response);
+        log.info("Task execution: {} response: {} hashCode: {}", taskInfo, response, this.hashCode());
 
         //TODO 这里应该记录执行日志
 

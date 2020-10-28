@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * @ClassName TaskInfoEvent
  * @Description 任务事件
@@ -17,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskEvent {
+public class TaskEvent implements Serializable {
 
     /**
      * 任务信息

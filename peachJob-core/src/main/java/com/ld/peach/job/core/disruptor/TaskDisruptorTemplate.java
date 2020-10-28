@@ -1,7 +1,7 @@
 package com.ld.peach.job.core.disruptor;
 
 import com.ld.peach.job.core.model.TaskInfo;
-import com.lmax.disruptor.dsl.Disruptor;
+import com.lmax.disruptor.RingBuffer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
@@ -20,7 +20,7 @@ import java.util.Objects;
 public class TaskDisruptorTemplate {
 
     @Resource
-    protected Disruptor<TaskEvent> disruptor;
+    protected RingBuffer<TaskEvent> ringBuffer;
 
     /**
      * 发布事件
@@ -33,7 +33,7 @@ public class TaskDisruptorTemplate {
         }
 
         log.info("[TaskDisruptorTemplate] send taskInfo: {}", taskInfo);
-        disruptor.publishEvent((event, sequence, bb) -> event.setTaskInfo(bb), taskInfo);
+        ringBuffer.publishEvent((event, sequence, bb) -> event.setTaskInfo(bb), taskInfo);
     }
 
     /**

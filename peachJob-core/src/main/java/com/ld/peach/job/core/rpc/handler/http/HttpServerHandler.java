@@ -13,7 +13,6 @@ import io.netty.handler.codec.http.*;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
 
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
@@ -49,40 +48,24 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
     private void process(ChannelHandlerContext ctx, String uri, byte[] requestBytes, boolean keepAlive) {
         String requestId = null;
         try {
-            // services mapping
-            if ("/services".equals(uri)) {
-                // request
-                StringBuilder stringBuffer = new StringBuilder("<ui>");
-                for (String serviceKey : rpcProviderFactory.getServiceData().keySet()) {
-                    stringBuffer.append("<li>").append(serviceKey).append(": ").append(rpcProviderFactory.getServiceData().get(serviceKey)).append("</li>");
-                }
-                stringBuffer.append("</ui>");
-
-                // response serialize
-                byte[] responseBytes = stringBuffer.toString().getBytes(StandardCharsets.UTF_8);
-
-                // response-write
-                writeResponse(ctx, keepAlive, responseBytes);
-
-            } else {
-                // valid
-                if (requestBytes.length == 0) {
-                    throw new PeachRpcException("peach rpc request data empty.");
-                }
-
-                // request deserialize
-                PeachRpcRequest rpcRequest = (PeachRpcRequest) rpcProviderFactory.getSerializer().deserialize(requestBytes, PeachRpcRequest.class);
-                requestId = rpcRequest.getRequestId();
-
-                // invoke + response
-                PeachRpcResponse rpcResponse = rpcProviderFactory.invokeService(rpcRequest);
-
-                // response serialize
-                byte[] responseBytes = rpcProviderFactory.getSerializer().serialize(rpcResponse);
-
-                // response-write
-                writeResponse(ctx, keepAlive, responseBytes);
+            // valid
+            if (requestBytes.length == 0) {
+                throw new PeachRpcException("peach rpc request data empty.");
             }
+
+            // request deserialize
+            PeachRpcRequest rpcRequest = (PeachRpcRequest) rpcProviderFactory.getSerializer().deserialize(requestBytes, PeachRpcRequest.class);
+            requestId = rpcRequest.getRequestId();
+
+            // invoke + response
+            PeachRpcResponse rpcResponse = rpcProviderFactory.invokeService(rpcRequest);
+
+            // response serialize
+            byte[] responseBytes = rpcProviderFactory.getSerializer().serialize(rpcResponse);
+
+            // response-write
+            writeResponse(ctx, keepAlive, responseBytes);
+
         } catch (Exception e) {
             log.error(e.getMessage(), e);
 
