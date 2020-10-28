@@ -59,7 +59,7 @@ public class PeachJobAutoAdminConfiguration {
         SequenceBarrier sequenceBarrier = ringBuffer.newBarrier();
 
         ThreadPoolExecutor workerExecutor = new ThreadPoolExecutor(WORKER_SIZE, WORKER_SIZE, 0L, TimeUnit.MILLISECONDS,
-                new LinkedBlockingDeque<>(100), new ThreadFactory() {
+                new LinkedBlockingDeque<>(1000), new ThreadFactory() {
             private int counter = 0;
 
             @Override
