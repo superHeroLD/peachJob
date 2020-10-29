@@ -1,5 +1,6 @@
 package com.ld.peach.job.core.rpc.invoker.reference;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.ld.peach.job.core.exception.PeachRpcException;
 import com.ld.peach.job.core.generic.PeachRpcFutureResponse;
 import com.ld.peach.job.core.generic.PeachRpcRequest;
@@ -180,14 +181,15 @@ public class RpcReferenceBean {
                     String serviceKey = RpcProviderFactory.makeServiceKey(className, tmpVersion);
                     TreeSet<String> addressSet = invokerFactory.getServiceRegistry().discovery(serviceKey);
                     // load balance
-                    if (addressSet == null || addressSet.size() == 0) {
-                        // pass
-                    } else if (addressSet.size() == 1) {
-                        finalAddress = addressSet.first();
+
+                    if (!CollectionUtil.isEmpty(addressSet)) {
+                        if (addressSet.size() == 1) {
+                            finalAddress = addressSet.first();
+                        } else {
+                            //TODO 这里要写负载算法
+
+                        }
                     }
-
-                    //TODO 这里要写负载算法
-
                 }
             }
 

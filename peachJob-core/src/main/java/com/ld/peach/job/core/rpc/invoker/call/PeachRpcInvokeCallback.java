@@ -14,7 +14,7 @@ public abstract class PeachRpcInvokeCallback<T> {
     public abstract void onFailure(Throwable exception);
 
     @SuppressWarnings("rawtypes")
-    private static ThreadLocal<PeachRpcInvokeCallback> threadInvokerFuture = new ThreadLocal<>();
+    private static final ThreadLocal<PeachRpcInvokeCallback> threadInvokerFuture = new ThreadLocal<>();
 
     @SuppressWarnings("rawtypes")
     public static PeachRpcInvokeCallback getCallback() {

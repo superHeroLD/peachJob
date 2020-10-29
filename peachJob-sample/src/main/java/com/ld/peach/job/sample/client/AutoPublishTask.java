@@ -13,6 +13,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @ClassName AutoPublishTask
@@ -31,23 +32,40 @@ public class AutoPublishTask implements InitializingBean, DisposableBean {
     public void afterPropertiesSet() throws Exception {
         executor = new ScheduledThreadPoolExecutor(4);
 
-        executor.scheduleAtFixedRate(() -> {
-            try {
-                boolean result = PeachJobClient.publishTask(buildTestTask());
+        AtomicInteger count = new AtomicInteger(0);
 
-                if (!result) {
-                    log.error("send task fail");
-                }
-            } catch (Exception e) {
-                log.error("send test task occur error: ", e);
+        executor.scheduleAtFixedRate(() -> {
+
+            if (count.get() >= 10000) {
+            } else {
+                sendTestTask();
+
+                count.getAndIncrement();
             }
-        }, 1, 1, TimeUnit.SECONDS);
+
+
+        }, 100, 1, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public void destroy() throws Exception {
         if (Objects.nonNull(executor)) {
             executor.shutdown();
+        }
+    }
+
+    /**
+     * 发送测试任务
+     */
+    private void sendTestTask() {
+        try {
+            boolean result = PeachJobClient.publishTask(buildTestTask());
+
+            if (!result) {
+                log.error("send task fail");
+            }
+        } catch (Exception e) {
+            log.error("send test task occur error: ", e);
         }
     }
 
@@ -64,5 +82,4 @@ public class AutoPublishTask implements InitializingBean, DisposableBean {
                 .executionDate(ThreadLocalRandom.current().nextInt(10, 100), TimeUnit.SECONDS)
                 .build();
     }
-
 }

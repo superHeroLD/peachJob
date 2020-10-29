@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -96,7 +95,7 @@ public class TaskService {
         DateTime endTime = DateUtil.offsetMinute(new Date(), timeInterVal);
 
         List<TaskInfo> canExecutedTaskList = taskInfoMapper.selectList(Wrappers.<TaskInfo>lambdaQuery()
-                .in(TaskInfo::getStatus, Arrays.asList(TaskExecutionStatus.NOT_EXECUTION.getCode(), TaskExecutionStatus.FAIL.getCode())).between(TaskInfo::getEstimatedExecutionTime, startTime, endTime));
+                .eq(TaskInfo::getStatus, TaskExecutionStatus.NOT_EXECUTION.getCode()).between(TaskInfo::getEstimatedExecutionTime, startTime, endTime));
         log.info("canExecutedTaskList size: {} between startTime: {} endTime: {}", Objects.isNull(canExecutedTaskList) ? 0 : canExecutedTaskList.size(), startTime, endTime);
 
         return canExecutedTaskList;
