@@ -36,15 +36,15 @@ public class AutoPublishTask implements InitializingBean, DisposableBean {
 
         executor.scheduleAtFixedRate(() -> {
 
-            if (count.get() >= 10000) {
-            } else {
-                sendTestTask();
-
-                count.getAndIncrement();
+            if (count.get() <= 50000) {
+                sendTestTask(count.getAndIncrement());
             }
 
-
         }, 100, 1, TimeUnit.MILLISECONDS);
+
+        if (count.get() >= 50000) {
+            executor.shutdown();
+        }
     }
 
     @Override
@@ -57,9 +57,9 @@ public class AutoPublishTask implements InitializingBean, DisposableBean {
     /**
      * 发送测试任务
      */
-    private void sendTestTask() {
+    private void sendTestTask(int serialNum) {
         try {
-            boolean result = PeachJobClient.publishTask(buildTestTask());
+            boolean result = PeachJobClient.publishTask(buildTestTask(serialNum));
 
             if (!result) {
                 log.error("send task fail");
@@ -74,11 +74,11 @@ public class AutoPublishTask implements InitializingBean, DisposableBean {
      *
      * @return 任务信息
      */
-    private TaskInfo buildTestTask() {
+    private TaskInfo buildTestTask(int serialNum) {
         return PeachTaskBuilder.newBuilder()
                 .taskHandler("TestTaskHandler")
                 .taskName("TestTask")
-                .executeParams("This is a test task")
+                .executeParams(String.valueOf(serialNum))
                 .executionDate(ThreadLocalRandom.current().nextInt(10, 100), TimeUnit.SECONDS)
                 .build();
     }
