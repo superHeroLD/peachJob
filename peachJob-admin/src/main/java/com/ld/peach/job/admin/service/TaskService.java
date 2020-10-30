@@ -123,8 +123,12 @@ public class TaskService {
 
         AtomicInteger count = new AtomicInteger(0);
         canUpdateList.forEach(taskInfo -> {
-            int updateNum = taskInfoMapper.updateById(taskInfo);
-            count.addAndGet(updateNum);
+            try {
+                int updateNum = taskInfoMapper.updateById(taskInfo);
+                count.addAndGet(updateNum);
+            } catch (Exception ex) {
+                log.error("batchUpdateTaskInfoById update taskId: {} occur error", taskInfo.getId(), ex);
+            }
         });
 
         return count.get();

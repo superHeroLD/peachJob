@@ -54,7 +54,7 @@ public class PeachJobAutoAdminConfiguration {
     @ConditionalOnClass({RingBuffer.class})
     public RingBuffer<TaskEvent> disruptorRingBuffer() {
 
-        RingBuffer<TaskEvent> ringBuffer = RingBuffer.create(ProducerType.MULTI, TaskEvent::new, 256 * 1024, new SleepingWaitStrategy());
+        RingBuffer<TaskEvent> ringBuffer = RingBuffer.create(ProducerType.MULTI, TaskEvent::new, 256 * 1024, new BlockingWaitStrategy());
 
         SequenceBarrier sequenceBarrier = ringBuffer.newBarrier();
 
