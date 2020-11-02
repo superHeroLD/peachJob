@@ -1,5 +1,6 @@
 package com.ld.peach.job.admin.service;
 
+import com.alibaba.fastjson.JSON;
 import com.ld.peach.job.admin.mapper.TaskLogMapper;
 import com.ld.peach.job.core.async.TaskLogThreadPool;
 import com.ld.peach.job.core.generic.TaskResponse;
@@ -45,7 +46,7 @@ public class TaskLogService {
                         .setTaskId(taskInfo.getId())
                         .setAddress(address)
                         .setCreateTime(new Date())
-                        .setResult(response.getMsg())
+                        .setResult(Objects.nonNull(response.getData()) ? JSON.toJSONString(response.getData()) : "")
                         .setStatus((short) response.getCode());
 
                 taskLogMapper.insert(taskLog);

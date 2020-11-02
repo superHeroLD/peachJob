@@ -10,7 +10,7 @@ import java.util.Objects;
 
 /**
  * @ClassName PeachHttpClient
- * @Description TODO
+ * @Description Http client
  * @Author lidong
  * @Date 2020/10/17
  * @Version 1.0
@@ -18,6 +18,9 @@ import java.util.Objects;
 public class PeachHttpClient extends Client {
 
     private final Class<? extends ConnectClient> connectClientImpl = PeachHttpConnectClient.class;
+
+    public PeachHttpClient() {
+    }
 
     public PeachHttpClient(RpcReferenceBean rpcReferenceBean) {
         if (Objects.isNull(rpcReferenceBean)) {

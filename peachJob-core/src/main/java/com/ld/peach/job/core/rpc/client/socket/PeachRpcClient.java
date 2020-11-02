@@ -19,6 +19,9 @@ public class PeachRpcClient extends Client {
 
     private final Class<? extends ConnectClient> connectClientImpl = PeachConnectClient.class;
 
+    public PeachRpcClient() {
+    }
+
     public PeachRpcClient(RpcReferenceBean rpcReferenceBean) {
         if (Objects.isNull(rpcReferenceBean)) {
             throw new PeachRpcException("peach-rpc init PeachRpcClient [rpcReferenceBean] is null");

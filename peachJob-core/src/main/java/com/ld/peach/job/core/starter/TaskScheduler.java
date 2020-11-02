@@ -1,5 +1,6 @@
 package com.ld.peach.job.core.starter;
 
+import com.ld.peach.job.core.constant.ServerTypeEnum;
 import com.ld.peach.job.core.executor.ITaskExecutor;
 import com.ld.peach.job.core.handler.servlet.ServletServerHandler;
 import com.ld.peach.job.core.rpc.RpcProviderFactory;
@@ -117,6 +118,7 @@ public class TaskScheduler implements InitializingBean, DisposableBean {
 
         taskExecutor = (ITaskExecutor) new RpcReferenceBean(
                 PeachJobHelper.getRpcSerializer(),
+                ServerTypeEnum.NETTY,
                 CallType.SYNC,
                 ITaskExecutor.class,
                 null,

@@ -26,6 +26,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Configuration
 public class AutoPublishTask implements InitializingBean, DisposableBean {
 
+    private static final int SEND_SIZE = 5000;
+
     private ScheduledExecutorService executor;
 
     @Override
@@ -36,13 +38,13 @@ public class AutoPublishTask implements InitializingBean, DisposableBean {
 
         executor.scheduleAtFixedRate(() -> {
 
-            if (count.get() <= 50000) {
+            if (count.get() <= SEND_SIZE) {
                 sendTestTask(count.getAndIncrement());
             }
 
         }, 100, 1, TimeUnit.MILLISECONDS);
 
-        if (count.get() >= 50000) {
+        if (count.get() >= SEND_SIZE) {
             executor.shutdown();
         }
     }

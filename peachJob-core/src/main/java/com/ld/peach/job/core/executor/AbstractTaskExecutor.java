@@ -1,5 +1,6 @@
 package com.ld.peach.job.core.executor;
 
+import com.ld.peach.job.core.constant.ServerTypeEnum;
 import com.ld.peach.job.core.constant.TaskConstant;
 import com.ld.peach.job.core.handler.ITaskHandler;
 import com.ld.peach.job.core.rpc.RpcProviderFactory;
@@ -130,6 +131,7 @@ public abstract class AbstractTaskExecutor {
                     String addressUrl = address.concat(TaskConstant.ADMIN_SERVICE_API);
                     IAdminService appService = (IAdminService) new RpcReferenceBean(
                             getRpcSerializer(),
+                            ServerTypeEnum.NETTY_HTTP,
                             CallType.SYNC,
                             IAdminService.class,
                             null,

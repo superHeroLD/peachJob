@@ -1,13 +1,13 @@
 package com.ld.peach.job.core.rpc.invoker.reference;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.ld.peach.job.core.constant.ServerTypeEnum;
 import com.ld.peach.job.core.exception.PeachRpcException;
 import com.ld.peach.job.core.generic.PeachRpcFutureResponse;
 import com.ld.peach.job.core.generic.PeachRpcRequest;
 import com.ld.peach.job.core.generic.PeachRpcResponse;
 import com.ld.peach.job.core.rpc.Client;
 import com.ld.peach.job.core.rpc.RpcProviderFactory;
-import com.ld.peach.job.core.rpc.client.http.PeachHttpClient;
 import com.ld.peach.job.core.rpc.invoker.PeachRpcInvokerFactory;
 import com.ld.peach.job.core.rpc.invoker.call.CallType;
 import com.ld.peach.job.core.rpc.invoker.call.PeachRpcInvokeCallback;
@@ -71,12 +71,23 @@ public class RpcReferenceBean {
      */
     private String accessToken;
 
+    /**
+     * rpc 客户端
+     */
+    private Client client = null;
+
+    /**
+     * 服务器类型
+     */
+    private ServerTypeEnum serverTypeEnum;
+
     private PeachRpcInvokeCallback invokeCallback;
 
     private PeachRpcInvokerFactory invokerFactory;
 
 
     public RpcReferenceBean(IPeachJobRpcSerializer serializer,
+                            ServerTypeEnum serverTypeEnum,
                             CallType callType,
                             Class<?> iface,
                             String version,
@@ -96,6 +107,7 @@ public class RpcReferenceBean {
         this.accessToken = accessToken;
         this.invokeCallback = invokeCallback;
         this.invokerFactory = invokerFactory;
+        this.serverTypeEnum = serverTypeEnum;
 
         if (Objects.isNull(this.serializer)) {
             throw new PeachRpcException("peach-rpc reference serializer is missing");
@@ -109,6 +121,10 @@ public class RpcReferenceBean {
             throw new PeachRpcException("peach-rpc reference iface is missing");
         }
 
+        if (Objects.isNull(serverTypeEnum)) {
+            throw new PeachRpcException("peach-rpc reference serverType is missing");
+        }
+
         if (Objects.isNull(this.invokerFactory)) {
             this.invokerFactory = PeachRpcInvokerFactory.getInstance();
         }
@@ -120,18 +136,13 @@ public class RpcReferenceBean {
         initClient();
     }
 
-
-    /**
-     * rpc 客户端
-     */
-    private Client client = null;
-
     /**
      * 初始化客户端
      */
     private void initClient() {
         try {
-            client = new PeachHttpClient(this);
+            client = serverTypeEnum.getClientClass().newInstance();
+            client.init(this);
         } catch (Exception e) {
             throw new PeachRpcException(e);
         }
