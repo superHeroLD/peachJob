@@ -15,7 +15,7 @@ import java.util.Objects;
  * @Version 1.0
  */
 @Data
-public class TaskResponse<T> implements Serializable {
+public class TaskResponse implements Serializable {
 
     /**
      * 响应码
@@ -30,28 +30,28 @@ public class TaskResponse<T> implements Serializable {
     /**
      * 响应数据
      */
-    private T data;
+    private Object data;
 
-    public TaskResponse(int code, String msg, T data) {
+    public TaskResponse(int code, String msg, Object data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
     }
 
-    public static <T> TaskResponse<T> success(T data) {
-        return new TaskResponse<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMsg(), data);
+    public static TaskResponse success(Object data) {
+        return new TaskResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMsg(), data);
     }
 
-    public static <T> TaskResponse<T> success() {
-        return new TaskResponse<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMsg(), null);
+    public static TaskResponse success() {
+        return new TaskResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMsg(), null);
     }
 
-    public static <T> TaskResponse<T> fail() {
-        return new TaskResponse<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMsg(), null);
+    public static TaskResponse fail() {
+        return new TaskResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMsg(), null);
     }
 
-    public static <T> TaskResponse<T> fail(String msg) {
-        return new TaskResponse<>(ResponseCode.FAIL.getCode(), msg, null);
+    public static TaskResponse fail(String msg) {
+        return new TaskResponse(ResponseCode.FAIL.getCode(), msg, null);
     }
 
     public boolean isSuccess() {

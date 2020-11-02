@@ -1,6 +1,7 @@
 package com.ld.peach.job.core.service;
 
 import com.ld.peach.job.core.constant.TaskConstant;
+import com.ld.peach.job.core.generic.TaskResponse;
 import com.ld.peach.job.core.model.TaskInfo;
 import com.ld.peach.job.core.model.params.RegistryParam;
 
@@ -179,4 +180,13 @@ public interface IAdminService {
      * @return 注册的服务端的IP和端口
      */
     List<String> getAppAddressList();
+
+    /**
+     * 记录任务日志
+     *
+     * @param taskInfo 任务信息
+     * @param address  地址
+     * @param response 返回请求
+     */
+    void recordTaskLog(TaskInfo taskInfo, String address, TaskResponse response);
 }

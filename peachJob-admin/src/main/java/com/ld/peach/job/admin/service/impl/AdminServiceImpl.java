@@ -2,7 +2,9 @@ package com.ld.peach.job.admin.service.impl;
 
 import com.ld.peach.job.admin.service.LockService;
 import com.ld.peach.job.admin.service.RegistryService;
+import com.ld.peach.job.admin.service.TaskLogService;
 import com.ld.peach.job.admin.service.TaskService;
+import com.ld.peach.job.core.generic.TaskResponse;
 import com.ld.peach.job.core.model.TaskInfo;
 import com.ld.peach.job.core.model.params.RegistryParam;
 import com.ld.peach.job.core.service.IAdminService;
@@ -29,10 +31,11 @@ public class AdminServiceImpl implements IAdminService {
     private RegistryService registryService;
     @Resource
     private LockService lockService;
+    @Resource
+    private TaskLogService taskLogService;
 
     @Override
     public int publishTask(TaskInfo taskInfo) {
-        log.info("receive task: {}", taskInfo);
         return taskService.insertTask(taskInfo);
     }
 
@@ -89,5 +92,10 @@ public class AdminServiceImpl implements IAdminService {
     @Override
     public List<String> getAppAddressList() {
         return registryService.listAvailableServiceList();
+    }
+
+    @Override
+    public void recordTaskLog(TaskInfo taskInfo, String address, TaskResponse response) {
+        taskLogService.recordTaskLog(taskInfo, address, response);
     }
 }

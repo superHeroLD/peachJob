@@ -9,13 +9,13 @@ import java.util.function.*;
 
 /**
  * @ClassName DefaultTaskThreadPool
- * @Description 默认执行任务线程池
+ * @Description 任务日志线程池，往数据库写SQL，为了防止影响其他业务线程
  * @Author lidong
  * @Date 2020/4/28
  * @Version 1.0
  */
 @Slf4j
-public class DefaultTaskThreadPool {
+public class TaskLogThreadPool {
 
     /**
      * 线程池核心线程数
@@ -27,11 +27,11 @@ public class DefaultTaskThreadPool {
      */
     protected static final int DEFAULT_TASK_QUEUE_SIZE = 500;
 
-    private DefaultTaskThreadPool() {
+    private TaskLogThreadPool() {
     }
 
     private static class ThreadPoolHolder {
-        private static final ThreadPoolExecutor INSTANCE = new ThreadPoolExecutor(CORE_NUM, CORE_NUM,
+        private static final ThreadPoolExecutor INSTANCE = new ThreadPoolExecutor(CORE_NUM, CORE_NUM * 2,
                 60, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>(DEFAULT_TASK_QUEUE_SIZE),
                 new DefaultTaskThreadFactory(),
@@ -48,7 +48,7 @@ public class DefaultTaskThreadPool {
             SecurityManager s = System.getSecurityManager();
             group = (s != null) ? s.getThreadGroup() :
                     Thread.currentThread().getThreadGroup();
-            namePrefix = "peachJob-task-ThreadPool-" + POOL_NUMBER.getAndIncrement() + "-thread-";
+            namePrefix = "peachJob-taskLog-ThreadPool-" + POOL_NUMBER.getAndIncrement() + "-thread-";
         }
 
         @Override

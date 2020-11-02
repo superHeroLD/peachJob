@@ -40,7 +40,10 @@ public class TaskDispatchCenter {
         List<String> appAddressList = PeachJobHelper.getAppService().getAppAddressList();
         if (CollectionUtil.isEmpty(appAddressList)) {
             log.error("[TaskDispatchCenter] no service address available, dispatch task id: [{}] fail", taskInfo.getId());
-            return TaskResponse.fail("no service address available");
+
+            TaskResponse response = TaskResponse.fail("no service address available");
+            PeachJobHelper.getAppService().recordTaskLog(taskInfo, null, response);
+            return response;
         }
 
         //路由算法-简单Hash
@@ -54,7 +57,10 @@ public class TaskDispatchCenter {
 
         if (StringUtil.isBlank(address)) {
             log.error("[TaskDispatchCenter] no service address available, dispatch task id: [{}] fail", taskInfo.getId());
-            return TaskResponse.fail("no service address available");
+
+            TaskResponse response = TaskResponse.fail("no service address available");
+            PeachJobHelper.getAppService().recordTaskLog(taskInfo, null, response);
+            return response;
         }
 
         DispatchParam dispatchParam = new DispatchParam().setHandler(taskInfo.getTaskHandler())
@@ -73,16 +79,23 @@ public class TaskDispatchCenter {
             ITaskExecutor taskExecutor = TaskScheduler.getTaskExecutor(address);
             if (Objects.isNull(taskExecutor)) {
                 log.error("[runExecutor] can't find any taskExecutor by address: {}", address);
-                return TaskResponse.fail(String.format("can't find any taskExecutor by address: [{%s}]", address));
+                String errorMsg = String.format("can't find any taskExecutor by address: [{%s}]", address);
+
+                response = TaskResponse.fail(errorMsg);
+
+                PeachJobHelper.getAppService().recordTaskLog(taskInfo, address, response);
+                return response;
             }
 
             response = taskExecutor.run(dispatchParam);
         } catch (Exception ex) {
             response = TaskResponse.fail(ExceptionHelper.getErrorInfo(ex));
+            PeachJobHelper.getAppService().recordTaskLog(taskInfo, address, response);
         }
 
         //TODO 在这里重试还是在调度一次重试呢？
 
+        PeachJobHelper.getAppService().recordTaskLog(taskInfo, address, response);
         return response;
     }
 

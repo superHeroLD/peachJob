@@ -7,7 +7,6 @@ import com.ld.peach.job.core.dispatch.TaskDispatchCenter;
 import com.ld.peach.job.core.generic.TaskResponse;
 import com.ld.peach.job.core.model.TaskInfo;
 import com.ld.peach.job.core.service.PeachJobHelper;
-import com.lmax.disruptor.EventHandler;
 import com.lmax.disruptor.WorkHandler;
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,7 +53,6 @@ public class TaskEventHandler implements WorkHandler<TaskEvent> {
         TaskResponse response = TaskDispatchCenter.processTask(taskInfo);
         log.info("Task execution: {} response: {} hashCode: {}", taskInfo, response, this.hashCode());
 
-        //TODO 这里应该记录执行日志
 
         if (Objects.isNull(response) || !response.isSuccess()) {
             taskInfo.setStatus(TaskExecutionStatus.FAIL.getCode());
