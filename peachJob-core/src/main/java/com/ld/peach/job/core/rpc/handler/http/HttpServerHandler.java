@@ -38,14 +38,13 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 
         // request parse
         final byte[] requestBytes = ByteBufUtil.getBytes(msg.content());
-        final String uri = msg.uri();
         final boolean keepAlive = HttpUtil.isKeepAlive(msg);
 
         // do invoke
-        serverHandlerPool.execute(() -> process(ctx, uri, requestBytes, keepAlive));
+        serverHandlerPool.execute(() -> process(ctx, requestBytes, keepAlive));
     }
 
-    private void process(ChannelHandlerContext ctx, String uri, byte[] requestBytes, boolean keepAlive) {
+    private void process(ChannelHandlerContext ctx, byte[] requestBytes, boolean keepAlive) {
         String requestId = null;
         try {
             // valid

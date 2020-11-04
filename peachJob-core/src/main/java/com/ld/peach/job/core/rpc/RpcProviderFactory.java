@@ -1,12 +1,12 @@
 package com.ld.peach.job.core.rpc;
 
+import com.ld.peach.job.core.constant.ServerTypeEnum;
 import com.ld.peach.job.core.exception.PeachRpcException;
 import com.ld.peach.job.core.exception.helper.ExceptionHelper;
 import com.ld.peach.job.core.generic.PeachRpcRequest;
 import com.ld.peach.job.core.generic.PeachRpcResponse;
 import com.ld.peach.job.core.rpc.registry.IServiceRegistry;
 import com.ld.peach.job.core.rpc.serialize.IPeachJobRpcSerializer;
-import com.ld.peach.job.core.rpc.server.PeachHttpServer;
 import com.ld.peach.job.core.util.IpUtil;
 import com.ld.peach.job.core.util.NetUtil;
 import com.ld.peach.job.core.util.StringUtil;
@@ -49,11 +49,14 @@ public class RpcProviderFactory {
 
     private Map<String, String> serviceRegistryParam;
 
+    private ServerTypeEnum serverTypeEnum;
+
 
     /**
      * 初始化配置
      *
      * @param serializer           序列化
+     * @param serverTypeEnum       服务器类型
      * @param ip                   ip地址
      * @param port                 端口
      * @param accessToken          接入token
@@ -61,6 +64,7 @@ public class RpcProviderFactory {
      * @param serviceRegistryParam 注册类启动参数
      */
     public void initConfig(IPeachJobRpcSerializer serializer,
+                           ServerTypeEnum serverTypeEnum,
                            String ip,
                            int port,
                            String accessToken,
@@ -74,10 +78,15 @@ public class RpcProviderFactory {
         this.accessToken = accessToken;
         this.serviceRegistryClass = serviceRegistryClass;
         this.serviceRegistryParam = serviceRegistryParam;
+        this.serverTypeEnum = serverTypeEnum;
 
         // valid
         if (Objects.isNull(this.serializer)) {
             throw new PeachRpcException("peach-rpc provider serializer is missing");
+        }
+
+        if (Objects.isNull(this.serverTypeEnum)) {
+            throw new PeachRpcException("peach-rpc server type is missing");
         }
 
         if (StringUtil.isNotBlank(ip)) {
@@ -125,8 +134,8 @@ public class RpcProviderFactory {
         // start server
         serviceAddress = IpUtil.getIpPort(this.ip, port);
 
-        //TODO 这里以后要选择RPC服务器类型
-        server = new PeachHttpServer();
+        //设置服务器类型
+        server = serverTypeEnum.getServerClass().newInstance();
 
         //注册启动回调
         server.setStartedCallback(() -> {

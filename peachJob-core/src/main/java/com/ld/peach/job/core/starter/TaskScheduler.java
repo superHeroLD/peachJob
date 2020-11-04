@@ -87,6 +87,7 @@ public class TaskScheduler implements InitializingBean, DisposableBean {
         this.rpcProviderFactory = new RpcProviderFactory();
         rpcProviderFactory.initConfig(
                 new HessianSerializer(),
+                ServerTypeEnum.NETTY_HTTP,
                 null,
                 0,
                 PeachJobHelper.getJobsProperties().getAdminAccessToken(),

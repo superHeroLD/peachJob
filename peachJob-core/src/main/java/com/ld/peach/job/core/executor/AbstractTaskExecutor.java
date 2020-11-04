@@ -57,6 +57,11 @@ public abstract class AbstractTaskExecutor {
     private String accessToken;
 
     /**
+     * 服务器类型
+     */
+    private ServerTypeEnum serverTypeEnum;
+
+    /**
      * 序列化接口
      *
      * @return 序列化接口实现
@@ -75,7 +80,7 @@ public abstract class AbstractTaskExecutor {
         // init executor-server
         port = port > 0 ? port : NetUtil.findAvailablePort(9999);
         ip = (StringUtil.isNotBlank(ip)) ? ip : IpUtil.getIp();
-        initRpcProvider(ip, port, app, accessToken);
+        initRpcProvider(ip, port, ServerTypeEnum.NETTY, app, accessToken);
     }
 
     /**
@@ -135,7 +140,7 @@ public abstract class AbstractTaskExecutor {
                             CallType.SYNC,
                             IAdminService.class,
                             null,
-                            1000,
+                            3000,
                             addressUrl,
                             accessToken,
                             null,
@@ -154,14 +159,14 @@ public abstract class AbstractTaskExecutor {
      */
     private RpcProviderFactory rpcProviderFactory = null;
 
-    private void initRpcProvider(String ip, int port, String appName, String accessToken) throws Exception {
+    private void initRpcProvider(String ip, int port, ServerTypeEnum serverTypeEnum, String appName, String accessToken) throws Exception {
         // init, provider factory
         Map<String, String> serviceRegistryParam = new HashMap<>(16);
         serviceRegistryParam.put("appName", appName);
         serviceRegistryParam.put("address", IpUtil.getIpPort(ip, port));
 
         rpcProviderFactory = new RpcProviderFactory();
-        rpcProviderFactory.initConfig(getRpcSerializer(), ip, port, accessToken, ExecutorServiceRegistry.class, serviceRegistryParam);
+        rpcProviderFactory.initConfig(getRpcSerializer(), serverTypeEnum, ip, port, accessToken, ExecutorServiceRegistry.class, serviceRegistryParam);
 
         // add services
         rpcProviderFactory.addService(ITaskExecutor.class.getName(), null, new TaskExecutor());
