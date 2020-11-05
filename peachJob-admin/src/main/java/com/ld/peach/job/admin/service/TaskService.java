@@ -85,9 +85,13 @@ public class TaskService {
      * @param timeInterVal 时间间隔
      * @return 可执行任务列表
      */
-    public List<TaskInfo> getUnExecutedTaskList(int timeInterVal) {
+    public List<TaskInfo> getTaskList(int timeInterVal, List<TaskExecutionStatus> statusList) {
         if (timeInterVal <= 0) {
             throw new IllegalArgumentException("timeInterVal is less or equals zero");
+        }
+
+        if (Objects.isNull(statusList) || statusList.size() == 0) {
+            throw new IllegalArgumentException("statusList empty");
         }
 
         //计算时间间隔
@@ -95,8 +99,8 @@ public class TaskService {
         DateTime endTime = DateUtil.offsetMinute(new Date(), timeInterVal);
 
         List<TaskInfo> canExecutedTaskList = taskInfoMapper.selectList(Wrappers.<TaskInfo>lambdaQuery()
-                .eq(TaskInfo::getStatus, TaskExecutionStatus.NOT_EXECUTION.getCode()).between(TaskInfo::getEstimatedExecutionTime, startTime, endTime));
-        log.info("canExecutedTaskList size: {} between startTime: {} endTime: {}", Objects.isNull(canExecutedTaskList) ? 0 : canExecutedTaskList.size(), startTime, endTime);
+                .in(TaskInfo::getStatus, statusList.toArray()).between(TaskInfo::getEstimatedExecutionTime, startTime, endTime));
+        log.info("[getTaskList] statusList: [{}] list size: {} between startTime: {} endTime: {}", statusList, Objects.isNull(canExecutedTaskList) ? 0 : canExecutedTaskList.size(), startTime, endTime);
 
         return canExecutedTaskList;
     }

@@ -1,6 +1,7 @@
 package com.ld.peach.job.core.service;
 
 import com.ld.peach.job.core.constant.TaskConstant;
+import com.ld.peach.job.core.constant.task.TaskExecutionStatus;
 import com.ld.peach.job.core.generic.TaskResponse;
 import com.ld.peach.job.core.model.TaskInfo;
 import com.ld.peach.job.core.model.params.RegistryParam;
@@ -50,7 +51,7 @@ public interface IAdminService {
      * @param timeInterVal 时间间隔
      * @return 未执行任务列表
      */
-    List<TaskInfo> getUnExecutedTaskList(int timeInterVal);
+    List<TaskInfo> getTaskListByCondition(int timeInterVal, List<TaskExecutionStatus> statusList);
 
     /**
      * 根据 任务ID 获取任务信息对象

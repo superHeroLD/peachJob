@@ -4,6 +4,7 @@ import com.ld.peach.job.admin.service.LockService;
 import com.ld.peach.job.admin.service.RegistryService;
 import com.ld.peach.job.admin.service.TaskLogService;
 import com.ld.peach.job.admin.service.TaskService;
+import com.ld.peach.job.core.constant.task.TaskExecutionStatus;
 import com.ld.peach.job.core.generic.TaskResponse;
 import com.ld.peach.job.core.model.TaskInfo;
 import com.ld.peach.job.core.model.params.RegistryParam;
@@ -50,10 +51,10 @@ public class AdminServiceImpl implements IAdminService {
     }
 
     @Override
-    public List<TaskInfo> getUnExecutedTaskList(int timeInterVal) {
-        return taskService.getUnExecutedTaskList(timeInterVal);
+    public List<TaskInfo> getTaskListByCondition(int timeInterVal, List<TaskExecutionStatus> statusList) {
+        return taskService.getTaskList(timeInterVal, statusList);
     }
-
+    
     @Override
     public TaskInfo getTaskInfoById(Long id) {
         return taskService.getTaskInfoById(id);

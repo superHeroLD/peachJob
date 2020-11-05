@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,7 +45,8 @@ public class PeachJobHeartBeat implements Runnable {
                 wait = 0;
 
                 //获取未执行的任务信息
-                List<TaskInfo> unExecutedTaskList = appService.getUnExecutedTaskList(PeachJobHelper.getJobsProperties().getTaskQueryInterval());
+                List<TaskInfo> unExecutedTaskList = appService.getTaskListByCondition(PeachJobHelper.getJobsProperties().getTaskQueryInterval(),
+                        Collections.singletonList(TaskExecutionStatus.NOT_EXECUTION));
 
                 if (CollectionUtils.isEmpty(unExecutedTaskList)) {
                     return;

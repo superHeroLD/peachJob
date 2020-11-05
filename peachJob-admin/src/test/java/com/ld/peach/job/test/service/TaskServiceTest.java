@@ -1,6 +1,7 @@
 package com.ld.peach.job.test.service;
 
 import com.ld.peach.job.admin.service.TaskService;
+import com.ld.peach.job.core.constant.task.TaskExecutionStatus;
 import com.ld.peach.job.core.model.TaskInfo;
 import com.ld.peach.job.core.model.builder.PeachTaskBuilder;
 import com.ld.peach.job.test.BaseTest;
@@ -11,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -43,8 +45,7 @@ public class TaskServiceTest extends BaseTest {
 
     @Test
     public void getUnExecutedTaskListTest() {
-
-        List<TaskInfo> unExecutedTaskList = taskService.getUnExecutedTaskList(10);
+        List<TaskInfo> unExecutedTaskList = taskService.getTaskList(10, Collections.singletonList(TaskExecutionStatus.NOT_EXECUTION));
         log.info("unExecutedTaskList size: {}", unExecutedTaskList.size());
     }
 }

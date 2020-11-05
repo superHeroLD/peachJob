@@ -7,6 +7,7 @@ import com.ld.peach.job.core.rpc.RpcProviderFactory;
 import com.ld.peach.job.core.rpc.invoker.call.CallType;
 import com.ld.peach.job.core.rpc.invoker.reference.RpcReferenceBean;
 import com.ld.peach.job.core.rpc.serialize.impl.HessianSerializer;
+import com.ld.peach.job.core.service.AbnormalTaskThread;
 import com.ld.peach.job.core.service.IAdminService;
 import com.ld.peach.job.core.service.PeachJobHeartBeat;
 import com.ld.peach.job.core.service.PeachJobHelper;
@@ -58,6 +59,7 @@ public class TaskScheduler implements InitializingBean, DisposableBean {
         });
 
         executor.scheduleAtFixedRate(new PeachJobHeartBeat(), 1, 1, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(new AbnormalTaskThread(), 1, 1, TimeUnit.SECONDS);
 
         log.info("[TaskScheduler] init admin service success.");
     }
