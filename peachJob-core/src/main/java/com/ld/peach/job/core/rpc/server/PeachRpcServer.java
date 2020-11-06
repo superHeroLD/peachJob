@@ -20,6 +20,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -46,7 +47,14 @@ public class PeachRpcServer extends Server {
                     60L,
                     TimeUnit.SECONDS,
                     new LinkedBlockingQueue<>(1000),
-                    r -> new Thread(r, "peach-rpc-serverHandler-ThreadPool-" + r.hashCode()),
+                    new ThreadFactory() {
+                        int count = 0;
+
+                        @Override
+                        public Thread newThread(Runnable r) {
+                            return new Thread(r, "peach-rpc-serverHandler-Thread-" + count++);
+                        }
+                    },
                     (r, executor) -> {
                         throw new PeachRpcException("peach-rpc-serverHandler-ThreadPool is EXHAUSTED!");
                     });
