@@ -1,5 +1,7 @@
 package com.ld.peach.job.core.service;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
 import com.ld.peach.job.core.constant.TaskConstant;
 import com.ld.peach.job.core.constant.task.TaskExecutionStatus;
 import com.ld.peach.job.core.model.TaskInfo;
@@ -7,7 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName AbnormalTaskThread
@@ -36,6 +40,27 @@ public class AbnormalTaskThread implements Runnable {
                 List<TaskInfo> unExecutedTaskList = PeachJobHelper.getAppService().getTaskListByCondition(PeachJobHelper.getJobsProperties().getTaskQueryInterval(),
                         Collections.singletonList(TaskExecutionStatus.FAIL));
                 log.info("[AbnormalTaskThread] execute find unExecuted task list size: {}", unExecutedTaskList.size());
+
+                if (CollectionUtil.isEmpty(unExecutedTaskList)) {
+                    return;
+                }
+
+                Date now = new Date();
+                List<TaskInfo> canExecutedTaskList = unExecutedTaskList.stream()
+                        .filter(taskInfo -> DateUtil.compare(now, taskInfo.getEstimatedExecutionTime()) >= 0).collect(Collectors.toList());
+
+                List<TaskInfo> updateList = unExecutedTaskList.stream()
+                        .peek(taskInfo -> taskInfo.setStatus(TaskExecutionStatus.DISTRIBUTED.getCode()))
+                        .collect(Collectors.toList());
+
+                //批量更新发放状态
+                int updateNum = PeachJobHelper.getAppService().batchUpdateTaskInfoById(updateList);
+                if (updateNum > 0) {
+                    log.info("[PeachJobHeartBeat] success distributed: {} tasks", updateNum);
+                }
+
+                //进行任务分发
+                PeachJobHelper.getTaskDisruptorTemplate().bulkPublish(canExecutedTaskList);
             }
         } catch (Exception ex) {
             if (ex instanceof DuplicateKeyException) {
