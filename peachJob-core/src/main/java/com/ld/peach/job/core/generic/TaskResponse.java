@@ -20,7 +20,7 @@ public class TaskResponse implements Serializable {
     /**
      * 响应码
      */
-    private int code;
+    private int  code;
 
     /**
      * 响应信息

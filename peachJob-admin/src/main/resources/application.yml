@@ -53,7 +53,7 @@ mybatis-plus:
   configuration:
     cache-enabled: false
     map-underscore-to-camel-case: true
-  #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 # peach-job
 peach-job:

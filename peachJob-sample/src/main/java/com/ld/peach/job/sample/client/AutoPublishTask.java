@@ -42,7 +42,7 @@ public class AutoPublishTask implements InitializingBean, DisposableBean {
                 sendTestTask(count.getAndIncrement());
             }
 
-        }, 100, 1, TimeUnit.MILLISECONDS);
+        }, 10, 1, TimeUnit.MILLISECONDS);
 
         if (count.get() >= SEND_SIZE) {
             executor.shutdown();

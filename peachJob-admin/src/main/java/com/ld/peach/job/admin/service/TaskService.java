@@ -99,7 +99,7 @@ public class TaskService {
         DateTime endTime = DateUtil.offsetMinute(new Date(), timeInterVal);
 
         List<TaskInfo> canExecutedTaskList = taskInfoMapper.selectList(Wrappers.<TaskInfo>lambdaQuery()
-                .in(TaskInfo::getStatus, statusList.toArray()).between(TaskInfo::getEstimatedExecutionTime, startTime, endTime));
+                .in(TaskInfo::getStatus, statusList.stream().map(TaskExecutionStatus::getCode).toArray()).between(TaskInfo::getEstimatedExecutionTime, startTime, endTime));
         log.info("[getTaskList] statusList: [{}] list size: {} between startTime: {} endTime: {}", statusList, Objects.isNull(canExecutedTaskList) ? 0 : canExecutedTaskList.size(), startTime, endTime);
 
         return canExecutedTaskList;

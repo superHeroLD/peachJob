@@ -56,7 +56,7 @@ public class AbnormalTaskThread implements Runnable {
                 //批量更新发放状态
                 int updateNum = PeachJobHelper.getAppService().batchUpdateTaskInfoById(updateList);
                 if (updateNum > 0) {
-                    log.info("[PeachJobHeartBeat] success distributed: {} tasks", updateNum);
+                    log.info("[AbnormalTaskThread] success distributed: {} tasks", updateNum);
                 }
 
                 //进行任务分发
