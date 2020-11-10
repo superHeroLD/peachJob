@@ -36,31 +36,11 @@ public class AbnormalTaskThread implements Runnable {
         try {
 
             if (appService.tryLock(TaskConstant.ABNORMAL_TASK_LOCK_KEY)) {
-                //处理失败任务
-                List<TaskInfo> unExecutedTaskList = PeachJobHelper.getAppService().getTaskListByCondition(PeachJobHelper.getJobsProperties().getTaskQueryInterval(),
-                        Collections.singletonList(TaskExecutionStatus.FAIL));
-                log.info("[AbnormalTaskThread] execute find unExecuted task list size: {}", unExecutedTaskList.size());
+                //处理执行失败的任务
+                handleFailTask();
 
-                if (CollectionUtil.isEmpty(unExecutedTaskList)) {
-                    return;
-                }
-
-                Date now = new Date();
-                List<TaskInfo> canExecutedTaskList = unExecutedTaskList.stream()
-                        .filter(taskInfo -> DateUtil.compare(now, taskInfo.getEstimatedExecutionTime()) >= 0).collect(Collectors.toList());
-
-                List<TaskInfo> updateList = unExecutedTaskList.stream()
-                        .peek(taskInfo -> taskInfo.setStatus(TaskExecutionStatus.DISTRIBUTED.getCode()))
-                        .collect(Collectors.toList());
-
-                //批量更新发放状态
-                int updateNum = PeachJobHelper.getAppService().batchUpdateTaskInfoById(updateList);
-                if (updateNum > 0) {
-                    log.info("[AbnormalTaskThread] success distributed: {} tasks", updateNum);
-                }
-
-                //进行任务分发
-                PeachJobHelper.getTaskDisruptorTemplate().bulkPublish(canExecutedTaskList);
+                //TODO 处理发送中超时的任务
+                handleTimeOutTask();
             }
         } catch (Exception ex) {
             if (ex instanceof DuplicateKeyException) {
@@ -74,6 +54,42 @@ public class AbnormalTaskThread implements Runnable {
             //超过90S就释放锁，强制释放
             appService.unlock(TaskConstant.ABNORMAL_TASK_LOCK_KEY, wait > 90);
         }
+
+    }
+
+    /**
+     * 处理一段时间内执行失败的任务
+     */
+    private void handleFailTask() {
+        List<TaskInfo> unExecutedTaskList = PeachJobHelper.getAppService().getTaskListByCondition(PeachJobHelper.getJobsProperties().getTaskQueryInterval(),
+                Collections.singletonList(TaskExecutionStatus.FAIL));
+        log.info("[AbnormalTaskThread] execute find unExecuted task list size: {}", unExecutedTaskList.size());
+
+        if (CollectionUtil.isEmpty(unExecutedTaskList)) {
+            return;
+        }
+
+        List<TaskInfo> canExecutedTaskList = unExecutedTaskList.stream()
+                .filter(taskInfo -> DateUtil.compare(new Date(), taskInfo.getEstimatedExecutionTime()) >= 0).collect(Collectors.toList());
+
+        List<TaskInfo> updateList = unExecutedTaskList.stream()
+                .peek(taskInfo -> taskInfo.setStatus(TaskExecutionStatus.DISTRIBUTED.getCode()))
+                .collect(Collectors.toList());
+
+        //批量更新发放状态
+        int updateNum = PeachJobHelper.getAppService().batchUpdateTaskInfoById(updateList);
+        if (updateNum > 0) {
+            log.info("[AbnormalTaskThread] success distributed: {} tasks", updateNum);
+        }
+
+        //进行任务分发
+        PeachJobHelper.getTaskDisruptorTemplate().bulkPublish(canExecutedTaskList);
+    }
+
+    /**
+     * 处理发送任务执行超时
+     */
+    private void handleTimeOutTask() {
 
     }
 }

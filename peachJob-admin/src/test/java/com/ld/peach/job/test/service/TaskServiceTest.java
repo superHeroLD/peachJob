@@ -37,6 +37,7 @@ public class TaskServiceTest extends BaseTest {
                 .taskName("TestTask")
                 .executeParams("This is a test task")
                 .executionDate(1, TimeUnit.MINUTES)
+                .taskStatus(TaskExecutionStatus.FAIL.getCode())
                 .build();
 
         Integer insertNum = taskService.insertTask(taskInfo);

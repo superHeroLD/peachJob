@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -31,6 +33,11 @@ public enum TaskExecutionStatus {
     private final String desc;
 
     /**
+     * 所有的任务执行状态
+     */
+    public static final List<TaskExecutionStatus> STATUS_LIST = Collections.unmodifiableList(Arrays.asList(TaskExecutionStatus.values()));
+
+    /**
      * 根据code 查询任务执行状态
      *
      * @param code code
@@ -43,5 +50,19 @@ public enum TaskExecutionStatus {
 
         return Arrays.stream(TaskExecutionStatus.values())
                 .filter(status -> status.getCode() == code).findFirst().orElse(null);
+    }
+
+    /**
+     * 判断是否是合法的状态
+     *
+     * @param code code
+     * @return 是否
+     */
+    public static boolean legalStatus(Short code) {
+        if (Objects.isNull(code)) {
+            return false;
+        }
+
+        return STATUS_LIST.contains(getStatusByCode(code));
     }
 }

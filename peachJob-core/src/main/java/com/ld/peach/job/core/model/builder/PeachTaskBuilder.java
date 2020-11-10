@@ -56,6 +56,11 @@ public final class PeachTaskBuilder {
      */
     private Short executionStrategy;
 
+    /**
+     * 任务状态
+     */
+    private Short status;
+
     public static PeachTaskBuilder newBuilder() {
         return new PeachTaskBuilder();
     }
@@ -83,6 +88,21 @@ public final class PeachTaskBuilder {
         checkState(Objects.nonNull(num) && num > 0, "num value range is error");
 
         this.maxRetryNum = num;
+        return this;
+    }
+
+    /**
+     * 设置任务状态
+     * 注意，只在测试的时候用
+     *
+     * @param status 任务状态
+     * @return PeachTaskBuilder
+     */
+    public PeachTaskBuilder taskStatus(Short status) {
+        checkState(TaskExecutionStatus.legalStatus(status), String.format("Illegal status: [%s]", status));
+
+        this.status = status;
+
         return this;
     }
 
@@ -155,6 +175,7 @@ public final class PeachTaskBuilder {
         final String executeParams = builder.executeParams;
         final Integer maxRetryNum = Objects.nonNull(builder.maxRetryNum) ? builder.maxRetryNum : TaskConstant.MAX_RETRY_NUM;
         final Short executionStrategy = builder.executionStrategy;
+        final Short status = Objects.nonNull(builder.status) ? builder.status : TaskExecutionStatus.NOT_EXECUTION.getCode();
 
         TaskInfo taskInfo = new TaskInfo();
         taskInfo.setEstimatedExecutionTime(estimatedExecutionTime);
@@ -165,7 +186,7 @@ public final class PeachTaskBuilder {
         taskInfo.setExecutionStrategy(executionStrategy);
 
         //设置初始值
-        taskInfo.setStatus(TaskExecutionStatus.NOT_EXECUTION.getCode());
+        taskInfo.setStatus(status);
         taskInfo.setValid(Boolean.TRUE);
         taskInfo.setExecutionStrategy(TaskExecutionStrategy.DEFAULT.getCode());
 
