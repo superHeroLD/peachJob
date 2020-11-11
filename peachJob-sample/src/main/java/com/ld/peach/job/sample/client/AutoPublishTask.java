@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Configuration
 public class AutoPublishTask implements InitializingBean, DisposableBean {
 
-    private static final int SEND_SIZE = 50000;
+    private static final int SEND_SIZE = 100000;
 
     private ScheduledExecutorService executor;
 

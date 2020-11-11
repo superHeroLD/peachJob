@@ -11,6 +11,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -58,8 +59,10 @@ public class PeachJobHeartBeat implements Runnable {
                         .filter(taskInfo -> DateUtil.compare(now, taskInfo.getEstimatedExecutionTime()) >= 0).collect(Collectors.toList());
 
                 List<TaskInfo> updateList = canExecutedTaskList.stream()
-                        .peek(taskInfo -> taskInfo.setStatus(TaskExecutionStatus.DISTRIBUTED.getCode()))
-                        .collect(Collectors.toList());
+                        .peek(taskInfo -> {
+                            taskInfo.setStatus(TaskExecutionStatus.DISTRIBUTED.getCode());
+                            taskInfo.setExecutionTimes(Objects.nonNull(taskInfo.getExecutionTimes()) ? taskInfo.getExecutionTimes() + 1 : 1);
+                        }).collect(Collectors.toList());
 
                 //批量更新发放状态
                 int updateNum = PeachJobHelper.getAppService().batchUpdateTaskInfoById(updateList);

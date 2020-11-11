@@ -64,7 +64,6 @@ public class TaskEventHandler implements WorkHandler<TaskEvent> {
             }
         }
 
-        taskInfo.setExecutionTimes(taskInfo.getExecutionTimes() + 1);
         PeachJobHelper.getAppService().updateTaskInfoById(taskInfo);
     }
 }

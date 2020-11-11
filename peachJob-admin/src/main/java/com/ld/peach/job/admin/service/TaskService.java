@@ -105,6 +105,25 @@ public class TaskService {
         return canExecutedTaskList;
     }
 
+    public List<TaskInfo> getTaskListByCreateTimeCondition(int timeInterVal, List<TaskExecutionStatus> statusList) {
+        if (timeInterVal <= 0) {
+            throw new IllegalArgumentException("timeInterVal is less or equals zero");
+        }
+
+        if (Objects.isNull(statusList) || statusList.size() == 0) {
+            throw new IllegalArgumentException("statusList empty");
+        }
+
+        DateTime startTime = DateUtil.offsetMinute(new Date(), -timeInterVal);
+        DateTime endTime = DateUtil.offsetMinute(new Date(), timeInterVal);
+
+        List<TaskInfo> taskInfoList = taskInfoMapper.selectList(Wrappers.<TaskInfo>lambdaQuery()
+                .in(TaskInfo::getStatus, statusList.stream().map(TaskExecutionStatus::getCode).toArray()).between(TaskInfo::getCreateTime, startTime, endTime));
+        log.info("[getTaskListByCreateTimeCondition] statusList: [{}] list size: {} between startTime: {} endTime: {}", statusList, Objects.isNull(taskInfoList) ? 0 : taskInfoList.size(), startTime, endTime);
+
+        return taskInfoList;
+    }
+
     /**
      * 批量更新任务信息
      * 必须有ID

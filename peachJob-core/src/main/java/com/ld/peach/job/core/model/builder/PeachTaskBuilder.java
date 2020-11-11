@@ -98,6 +98,7 @@ public final class PeachTaskBuilder {
      * @param status 任务状态
      * @return PeachTaskBuilder
      */
+    @Deprecated
     public PeachTaskBuilder taskStatus(Short status) {
         checkState(TaskExecutionStatus.legalStatus(status), String.format("Illegal status: [%s]", status));
 

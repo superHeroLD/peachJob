@@ -7,10 +7,12 @@ import com.ld.peach.job.core.constant.task.TaskExecutionStatus;
 import com.ld.peach.job.core.model.TaskInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -73,8 +75,10 @@ public class AbnormalTaskThread implements Runnable {
                 .filter(taskInfo -> DateUtil.compare(new Date(), taskInfo.getEstimatedExecutionTime()) >= 0).collect(Collectors.toList());
 
         List<TaskInfo> updateList = unExecutedTaskList.stream()
-                .peek(taskInfo -> taskInfo.setStatus(TaskExecutionStatus.DISTRIBUTED.getCode()))
-                .collect(Collectors.toList());
+                .peek(taskInfo -> {
+                    taskInfo.setStatus(TaskExecutionStatus.DISTRIBUTED.getCode());
+                    taskInfo.setExecutionTimes(Objects.nonNull(taskInfo.getExecutionTimes()) ? taskInfo.getExecutionTimes() + 1 : 1);
+                }).collect(Collectors.toList());
 
         //批量更新发放状态
         int updateNum = PeachJobHelper.getAppService().batchUpdateTaskInfoById(updateList);
@@ -90,6 +94,31 @@ public class AbnormalTaskThread implements Runnable {
      * 处理发送任务执行超时
      */
     private void handleTimeOutTask() {
+        List<TaskInfo> noFeedBackTaskList = PeachJobHelper.getAppService().getTaskListBeforeSpecifyTimeInterval(PeachJobHelper.getJobsProperties().getNoFeedBackTaskQueryInterval()
+                , Collections.singletonList(TaskExecutionStatus.DISTRIBUTED));
 
+        if (CollectionUtils.isEmpty(noFeedBackTaskList)) {
+            return;
+        }
+
+        log.info("[handleTimeOutTask] find no feed back task list size: {} timeInterval: {}", noFeedBackTaskList.size(),
+                PeachJobHelper.getJobsProperties().getNoFeedBackTaskQueryInterval());
+
+        Date now = new Date();
+        //处理已经超时的任务
+        noFeedBackTaskList.forEach(tmpTask -> {
+            if (DateUtil.compare(now, tmpTask.getEstimatedExecutionTime()) > 0) {
+                tmpTask.setStatus(TaskExecutionStatus.ABANDONED.getCode());
+            } else {
+                if (tmpTask.getExecutionTimes() < tmpTask.getMaxRetryNum()) {
+                    tmpTask.setStatus(TaskExecutionStatus.FAIL.getCode());
+                } else {
+                    tmpTask.setStatus(TaskExecutionStatus.ABANDONED.getCode());
+                }
+            }
+        });
+
+        //批量更新任务状态
+        PeachJobHelper.getAppService().batchUpdateTaskInfoById(noFeedBackTaskList);
     }
 }

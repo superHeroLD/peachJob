@@ -45,13 +45,24 @@ public interface IAdminService {
     boolean registry(RegistryParam registryParam);
 
     /**
-     * 待调度任务列表
+     * 查询任务列表
      * 时间间隔单位是分钟
+     * 查询时间的字段是estimated_execution_time
      *
      * @param timeInterVal 时间间隔
      * @return 未执行任务列表
      */
     List<TaskInfo> getTaskListByCondition(int timeInterVal, List<TaskExecutionStatus> statusList);
+
+    /**
+     * 查询一段时间间隔之前的任务数据
+     * 这里查询的时间是create_time
+     *
+     * @param timeInterVal 时间间隔
+     * @param statusList   状态列表
+     * @return 任务列表
+     */
+    List<TaskInfo> getTaskListBeforeSpecifyTimeInterval(int timeInterVal, List<TaskExecutionStatus> statusList);
 
     /**
      * 根据 任务ID 获取任务信息对象
@@ -80,7 +91,7 @@ public interface IAdminService {
     /**
      * 使用线程本地变量记录锁的持有者
      */
-    ThreadLocal<String> OWNER_THREADLOCAL = new ThreadLocal<>();
+    ThreadLocal<String> OWNER_THREAD_LOCAL = new ThreadLocal<>();
 
     /**
      * 尝试获取锁
@@ -89,18 +100,18 @@ public interface IAdminService {
      * @return 返回true代表已经获得锁，false代表获取锁失败（锁已经被别的进程占有）
      */
     default boolean tryLock(String lockKey) {
-        String owner = OWNER_THREADLOCAL.get();
+        String owner = OWNER_THREAD_LOCAL.get();
         if (Objects.nonNull(owner) && !owner.equals(TaskConstant.OPERATION_TRY_LOCK)) {
             // already hold a lock
             return true;
         }
-        OWNER_THREADLOCAL.set(TaskConstant.OPERATION_TRY_LOCK);
+        OWNER_THREAD_LOCAL.set(TaskConstant.OPERATION_TRY_LOCK);
 
         owner = UUID.randomUUID().toString().replace("-", "")
                 .concat(String.valueOf(ThreadLocalRandom.current().nextInt(123456)));
 
         if (tryLock(lockKey, owner)) {
-            OWNER_THREADLOCAL.set(owner);
+            OWNER_THREAD_LOCAL.set(owner);
             return true;
         }
         return false;
@@ -117,12 +128,12 @@ public interface IAdminService {
         if (force) {
             unlock(lockKey, null);
         } else {
-            String owner = OWNER_THREADLOCAL.get();
-            if (null == owner) {
+            String owner = OWNER_THREAD_LOCAL.get();
+            if (Objects.isNull(owner)) {
                 throw new IllegalMonitorStateException("should not call unlock() without tryLock(()");
             }
 
-            OWNER_THREADLOCAL.remove();
+            OWNER_THREAD_LOCAL.remove();
             if (!TaskConstant.OPERATION_TRY_LOCK.equals(owner)) {
                 unlock(lockKey, owner);
             }
@@ -161,7 +172,6 @@ public interface IAdminService {
      * 移除超时节点
      *
      * @param timeout 超时时长
-     * @return
      */
     int removeTimeOutApp(int timeout);
 
@@ -169,7 +179,6 @@ public interface IAdminService {
      * 移除节点
      *
      * @param registryParam 注册参数
-     * @return
      */
     boolean removeApp(RegistryParam registryParam);
 
