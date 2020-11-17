@@ -104,7 +104,6 @@ public class AbnormalTaskThread implements Runnable {
         log.info("[handleTimeOutTask] find no feed back task list size: {} timeInterval: {}", noFeedBackTaskList.size(),
                 PeachJobHelper.getJobsProperties().getNoFeedBackTaskQueryInterval());
 
-        Date now = new Date();
         //处理已经超时的任务
         noFeedBackTaskList.forEach(tmpTask -> {
             if (tmpTask.getExecutionTimes() < tmpTask.getMaxRetryNum()) {
