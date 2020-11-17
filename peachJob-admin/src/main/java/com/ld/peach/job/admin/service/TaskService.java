@@ -105,7 +105,7 @@ public class TaskService {
         return canExecutedTaskList;
     }
 
-    public List<TaskInfo> getTaskListByCreateTimeCondition(int timeInterVal, List<TaskExecutionStatus> statusList) {
+    public List<TaskInfo> getTaskListByEstimatedTimeCondition(int timeInterVal, List<TaskExecutionStatus> statusList) {
         if (timeInterVal <= 0) {
             throw new IllegalArgumentException("timeInterVal is less or equals zero");
         }
@@ -118,8 +118,8 @@ public class TaskService {
         DateTime endTime = DateUtil.offsetMinute(new Date(), timeInterVal);
 
         List<TaskInfo> taskInfoList = taskInfoMapper.selectList(Wrappers.<TaskInfo>lambdaQuery()
-                .in(TaskInfo::getStatus, statusList.stream().map(TaskExecutionStatus::getCode).toArray()).between(TaskInfo::getCreateTime, startTime, endTime));
-        log.info("[getTaskListByCreateTimeCondition] statusList: [{}] list size: {} between startTime: {} endTime: {}", statusList, Objects.isNull(taskInfoList) ? 0 : taskInfoList.size(), startTime, endTime);
+                .in(TaskInfo::getStatus, statusList.stream().map(TaskExecutionStatus::getCode).toArray()).between(TaskInfo::getEstimatedExecutionTime, startTime, endTime));
+        log.info("[getTaskListByEstimatedTimeCondition] statusList: [{}] list size: {} between startTime: {} endTime: {}", statusList, Objects.isNull(taskInfoList) ? 0 : taskInfoList.size(), startTime, endTime);
 
         return taskInfoList;
     }

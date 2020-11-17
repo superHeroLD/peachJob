@@ -56,8 +56,8 @@ public class AdminServiceImpl implements IAdminService {
     }
 
     @Override
-    public List<TaskInfo> getTaskListBeforeSpecifyTimeInterval(int timeInterVal, List<TaskExecutionStatus> statusList) {
-        return taskService.getTaskListByCreateTimeCondition(timeInterVal, statusList);
+    public List<TaskInfo> getTaskListByEstimatedTimeCondition(int timeInterVal, List<TaskExecutionStatus> statusList) {
+        return taskService.getTaskListByEstimatedTimeCondition(timeInterVal, statusList);
     }
 
     @Override

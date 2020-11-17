@@ -11,7 +11,7 @@ public interface TaskConstant {
     /**
      * 成功
      */
-    int CODE_SUCCESS = 0;
+    int CODE_SUCCESS = 1;
 
     /**
      * 失败

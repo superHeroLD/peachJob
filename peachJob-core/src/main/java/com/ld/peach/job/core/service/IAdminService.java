@@ -56,13 +56,13 @@ public interface IAdminService {
 
     /**
      * 查询一段时间间隔之前的任务数据
-     * 这里查询的时间是create_time
+     * 这里查询的时间是预期执行时间
      *
      * @param timeInterVal 时间间隔
      * @param statusList   状态列表
      * @return 任务列表
      */
-    List<TaskInfo> getTaskListBeforeSpecifyTimeInterval(int timeInterVal, List<TaskExecutionStatus> statusList);
+    List<TaskInfo> getTaskListByEstimatedTimeCondition(int timeInterVal, List<TaskExecutionStatus> statusList);
 
     /**
      * 根据 任务ID 获取任务信息对象

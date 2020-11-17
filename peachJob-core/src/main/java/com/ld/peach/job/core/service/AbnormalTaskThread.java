@@ -41,7 +41,7 @@ public class AbnormalTaskThread implements Runnable {
                 //处理执行失败的任务
                 handleFailTask();
 
-                //TODO 处理发送中超时的任务
+                //处理超时任务
                 handleTimeOutTask();
             }
         } catch (Exception ex) {
@@ -94,7 +94,7 @@ public class AbnormalTaskThread implements Runnable {
      * 处理发送任务执行超时
      */
     private void handleTimeOutTask() {
-        List<TaskInfo> noFeedBackTaskList = PeachJobHelper.getAppService().getTaskListBeforeSpecifyTimeInterval(PeachJobHelper.getJobsProperties().getNoFeedBackTaskQueryInterval()
+        List<TaskInfo> noFeedBackTaskList = PeachJobHelper.getAppService().getTaskListByEstimatedTimeCondition(PeachJobHelper.getJobsProperties().getNoFeedBackTaskQueryInterval()
                 , Collections.singletonList(TaskExecutionStatus.DISTRIBUTED));
 
         if (CollectionUtils.isEmpty(noFeedBackTaskList)) {
@@ -107,14 +107,10 @@ public class AbnormalTaskThread implements Runnable {
         Date now = new Date();
         //处理已经超时的任务
         noFeedBackTaskList.forEach(tmpTask -> {
-            if (DateUtil.compare(now, tmpTask.getEstimatedExecutionTime()) > 0) {
-                tmpTask.setStatus(TaskExecutionStatus.ABANDONED.getCode());
+            if (tmpTask.getExecutionTimes() < tmpTask.getMaxRetryNum()) {
+                tmpTask.setStatus(TaskExecutionStatus.FAIL.getCode());
             } else {
-                if (tmpTask.getExecutionTimes() < tmpTask.getMaxRetryNum()) {
-                    tmpTask.setStatus(TaskExecutionStatus.FAIL.getCode());
-                } else {
-                    tmpTask.setStatus(TaskExecutionStatus.ABANDONED.getCode());
-                }
+                tmpTask.setStatus(TaskExecutionStatus.ABANDONED.getCode());
             }
         });
 

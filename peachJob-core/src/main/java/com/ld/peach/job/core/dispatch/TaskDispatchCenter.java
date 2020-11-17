@@ -93,8 +93,6 @@ public class TaskDispatchCenter {
             PeachJobHelper.getAppService().recordTaskLog(taskInfo, address, response);
         }
 
-        //TODO 在这里重试还是在调度一次重试呢？
-
         PeachJobHelper.getAppService().recordTaskLog(taskInfo, address, response);
         return response;
     }

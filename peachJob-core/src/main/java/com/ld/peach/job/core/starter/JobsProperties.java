@@ -51,6 +51,6 @@ public class JobsProperties {
      * 查询已经发送但没有反馈的任务的时间间隔
      * 一般要要于上面的时间间隔
      */
-    private int noFeedBackTaskQueryInterval = 3;
+    private int noFeedBackTaskQueryInterval = 1;
 
 }
