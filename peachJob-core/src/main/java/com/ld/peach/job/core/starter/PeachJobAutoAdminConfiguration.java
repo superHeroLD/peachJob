@@ -3,6 +3,8 @@ package com.ld.peach.job.core.starter;
 import com.ld.peach.job.core.disruptor.TaskDisruptorTemplate;
 import com.ld.peach.job.core.disruptor.TaskEvent;
 import com.ld.peach.job.core.disruptor.TaskEventHandler;
+import com.ld.peach.job.core.router.ExecutorConsistentHashRouter;
+import com.ld.peach.job.core.router.IExecutorRouter;
 import com.ld.peach.job.core.rpc.serialize.IPeachJobRpcSerializer;
 import com.ld.peach.job.core.rpc.serialize.impl.HessianSerializer;
 import com.lmax.disruptor.*;
@@ -36,6 +38,12 @@ public class PeachJobAutoAdminConfiguration {
     @ConditionalOnMissingBean
     public IPeachJobRpcSerializer rpcSerializer() {
         return new HessianSerializer();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public IExecutorRouter executorRouter() {
+        return new ExecutorConsistentHashRouter();
     }
 
     @Bean

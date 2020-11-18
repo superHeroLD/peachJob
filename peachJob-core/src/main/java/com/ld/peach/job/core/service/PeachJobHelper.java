@@ -1,6 +1,7 @@
 package com.ld.peach.job.core.service;
 
 import com.ld.peach.job.core.disruptor.TaskDisruptorTemplate;
+import com.ld.peach.job.core.router.IExecutorRouter;
 import com.ld.peach.job.core.rpc.serialize.IPeachJobRpcSerializer;
 import com.ld.peach.job.core.starter.JobsProperties;
 import org.springframework.beans.factory.InitializingBean;
@@ -26,6 +27,8 @@ public class PeachJobHelper implements InitializingBean {
     private TaskDisruptorTemplate taskDisruptorTemplate;
     @Resource
     private IPeachJobRpcSerializer rpcSerializer;
+    @Resource
+    private IExecutorRouter executorRouter;
 
     private static PeachJobHelper PEACH_JOB_HELPER = null;
 
@@ -68,5 +71,14 @@ public class PeachJobHelper implements InitializingBean {
      */
     public static IPeachJobRpcSerializer getRpcSerializer() {
         return PEACH_JOB_HELPER.rpcSerializer;
+    }
+
+    /**
+     * 获取路由算法执行器
+     *
+     * @return executorRouter
+     */
+    public static IExecutorRouter getExecutorRouter() {
+        return PEACH_JOB_HELPER.executorRouter;
     }
 }
