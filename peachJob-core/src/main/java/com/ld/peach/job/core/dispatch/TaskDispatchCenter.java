@@ -8,7 +8,6 @@ import com.ld.peach.job.core.generic.param.DispatchParam;
 import com.ld.peach.job.core.model.TaskInfo;
 import com.ld.peach.job.core.service.PeachJobHelper;
 import com.ld.peach.job.core.starter.TaskScheduler;
-import com.ld.peach.job.core.util.HashUtil;
 import com.ld.peach.job.core.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,14 +45,8 @@ public class TaskDispatchCenter {
             return response;
         }
 
-        //路由算法-简单Hash
-        String address;
-        if (appAddressList.size() == 1) {
-            address = appAddressList.get(0);
-        } else {
-            int position = HashUtil.hash(taskInfo.getId()) % appAddressList.size();
-            address = appAddressList.get(position);
-        }
+        //路由算法
+        String address = PeachJobHelper.getExecutorRouter().route(appAddressList);
 
         if (StringUtil.isBlank(address)) {
             log.error("[TaskDispatchCenter] no service address available, dispatch task id: [{}] fail", taskInfo.getId());

@@ -1,7 +1,6 @@
 package com.ld.peach.job.core.router;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.ld.peach.job.core.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -18,8 +17,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ExecutorConsistentHashRouter implements IExecutorRouter {
 
     @Override
-    public String route(String app, List<String> addressList) {
-        if (StringUtil.isBlank(app) || CollectionUtil.isEmpty(addressList)) {
+    public String route(List<String> addressList) {
+        if (CollectionUtil.isEmpty(addressList)) {
             return null;
         }
 
@@ -33,8 +32,8 @@ public class ExecutorConsistentHashRouter implements IExecutorRouter {
         // 设置虚拟节点为真实节点数的 10 倍
         ConsistentHash<String> consistentHash = new ConsistentHash(nodeCount);
         consistentHash.add(addressList);
-        String address = consistentHash.getNode(app + ThreadLocalRandom.current().nextInt(nodeCount));
-        log.info("{} Consistent Hash Address [ {} ]", app, address);
+        String address = consistentHash.getNode(String.valueOf(ThreadLocalRandom.current().nextInt(nodeCount)));
+        log.info("Consistent Hash Address [ {} ]", address);
         return address;
     }
 }

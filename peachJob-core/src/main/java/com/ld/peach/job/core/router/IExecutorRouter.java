@@ -14,9 +14,8 @@ public interface IExecutorRouter {
     /**
      * 路由方法
      *
-     * @param app         客户端名称
      * @param addressList 待调用地址列表
      * @return 路由选择执行地址
      */
-    String route(String app, List<String> addressList);
+    String route(List<String> addressList);
 }

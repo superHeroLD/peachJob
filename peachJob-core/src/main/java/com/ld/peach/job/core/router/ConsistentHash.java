@@ -98,7 +98,6 @@ public class ConsistentHash<T> {
             hash = (hash ^ key.charAt(i)) * p;
         }
         hash += hash << 13;
-        hash ^= hash >> 7;
         hash += hash << 3;
         hash ^= hash >> 17;
         hash += hash << 5;
